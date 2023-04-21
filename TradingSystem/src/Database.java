@@ -32,6 +32,32 @@ public class Database {
             if (conn != null) { conn.close(); }
         }
     }
+    public boolean checkUser(String email, String password) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT * FROM Users WHERE `email` = ? AND `password` = ?");
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+            ResultSet rs = stmt.executeQuery();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+                return true;
+            } else {
+                if (conn != null) {
+                    conn.close();
+                } else {
+                    System.out.println("Connection to db failed.");
+                    return false;
+                }
+                System.out.println("User not found.");
+                return false;
+            }
+        }
+    }
     public void showUsers(){
         try {
             Statement stmt = conn.createStatement();

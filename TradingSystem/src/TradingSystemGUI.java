@@ -17,7 +17,7 @@ public class TradingSystemGUI extends JFrame {
     private JButton addButton = new JButton("Add User");
 
     public TradingSystemGUI(Database db) {
-        this.db =db;
+        this.db = db;
         setTitle("Trading System");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
