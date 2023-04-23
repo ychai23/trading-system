@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class UserLoginPage extends JFrame {
     private Database db;
@@ -12,9 +11,9 @@ public class UserLoginPage extends JFrame {
     private JTextField passwordTextField = new JTextField();
     private JButton loginButton = new JButton("Login");
 
-    public UserLoginPage(Database db) {
-        this.db = db;
-        setTitle("Trading System");
+    public UserLoginPage() {
+        this.db = Database.getInstance();
+        setTitle("Log in to Your Account");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(5, 2));
@@ -30,13 +29,24 @@ public class UserLoginPage extends JFrame {
                 String password = passwordTextField.getText();
                 System.out.println(email);
                 System.out.println(password);
+                JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(loginButton); // Get the current frame
+
                 // Add user to the database
                 try {
-                    boolean success = db.checkUser(email, password);
+                    boolean success = db.checkUserInDB(email, password);
                     if (success) {
                         System.out.println("User successfully logged in!");
-                        UserMainPage ump = new UserMainPage(db);
-                        ump.setVisible(true);
+                        currentFrame.dispose();
+                        // If user role is manager, redirect to manager page
+                        if (db.getUserRole(email).equals("Manager")) {
+                            ManagerMainPage mmp = new ManagerMainPage();
+                            mmp.setVisible(true);
+                        }
+                        else{
+                            CustomerMainPage cmp = new CustomerMainPage();
+                            cmp.setVisible(true);
+                        }
+
                     } else{
                         // prompt to re-enter
                         System.out.println("Error login to database.");

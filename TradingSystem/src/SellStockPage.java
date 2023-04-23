@@ -4,6 +4,7 @@ import java.awt.event.*;
 import java.sql.SQLException;
 
 public class SellStockPage extends JFrame{
+    private Database db;
     private JButton viewOwnedStockButton = new JButton(" View ALL Owned Stock");
     private JLabel stockIDLabel = new JLabel("Enter stockID to sell");
     private JTextField stockIDTextField = new JTextField();
@@ -12,7 +13,8 @@ public class SellStockPage extends JFrame{
     private JButton confirmSellButton = new JButton("Confirm");
     private JButton cancelButton = new JButton("Cancel");
 
-    public SellStockPage(Database db) {
+    public SellStockPage() {
+        this.db = Database.getInstance();
         setTitle("Stock Sell Page");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

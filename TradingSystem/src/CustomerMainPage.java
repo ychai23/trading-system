@@ -1,15 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.SQLException;
 
-public class UserMainPage extends JFrame{
+public class CustomerMainPage extends JFrame{
+    private Database db;
     private JButton buyStockButton = new JButton("Buy Stock");
     private JButton sellStockButton = new JButton("Sell Stock");
     private JButton depositButton = new JButton("Deposit");
     private JButton logoutButton = new JButton("Logout");
 
-    public UserMainPage(Database db) {
+    public CustomerMainPage() {
+        this.db = Database.getInstance();
         setTitle("Welcome to your trading page!");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -22,7 +23,7 @@ public class UserMainPage extends JFrame{
         buyStockButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // redirect to buystockpage
-                BuyStockPage bsp = new BuyStockPage(db);
+                BuyStockPage bsp = new BuyStockPage();
                 bsp.setVisible(true);
             }
         });
@@ -30,7 +31,7 @@ public class UserMainPage extends JFrame{
         sellStockButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // redirect to sellstockpage
-                SellStockPage ssp = new SellStockPage(db);
+                SellStockPage ssp = new SellStockPage();
                 ssp.setVisible(true);
             }
         });

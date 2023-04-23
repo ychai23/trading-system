@@ -12,7 +12,7 @@ public class BuyStockPage extends JFrame{
     private JButton confirmBuyButton = new JButton("Confirm");
     private JButton cancelButton = new JButton("Cancel");
 
-    public BuyStockPage(Database db) {
+    public BuyStockPage() {
         setTitle("Stock Purchase Page");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
