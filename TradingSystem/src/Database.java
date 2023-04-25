@@ -4,7 +4,11 @@ and class is accessed throughout application.
 
 Class handles all database operations.
 */
+import javax.swing.plaf.nimbus.State;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Database {
     private Connection conn;
     private static Database instance = null;
@@ -20,7 +24,7 @@ public class Database {
         if (instance == null) {
             try {
                 // change this password to your own
-                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
+                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
     //            TradingSystemGUI gui = new TradingSystemGUI(db);
             } catch (SQLException e) {
                 System.err.println("Error: " + e.getMessage());
@@ -33,7 +37,7 @@ public class Database {
 
 
     public Connection getConnection() throws SQLException {
-        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
         return conn;
     }
 
@@ -177,4 +181,106 @@ public class Database {
     public void close() throws SQLException {
         conn.close();
     }
+    public boolean addStockToMarket(Stock stock) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("INSERT INTO Stocks (name, symbol, price, isactive) VALUES (?,?, ?,?)");
+            stmt.setString(1, stock.getName());
+            stmt.setString(2, stock.getSymbol());
+            stmt.setDouble(3, stock.getPrice());
+            stmt.setBoolean(4, stock.isActive());
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    public boolean updateStockPrice(Stock updatedStock, double price) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "UPDATE stocks SET price = ? WHERE symbol = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setDouble(1, updatedStock.getPrice());
+            stmt.setString(2, updatedStock.getSymbol());
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+
+
+    }
+
+    public List<Stock> getMarketData() throws SQLException {
+        List<Stock> marketData = new ArrayList<>();
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Stocks");
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Stock stock = new Stock(rs.getString("name"), rs.getString("symbol"),rs.getDouble("price"));
+                stock.setID(rs.getInt("stockid"));
+                stock.setActive(rs.getBoolean("isactive"));
+                marketData.add(stock);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return marketData;
+    }
+
+    public void deleteTableData(String tableName) throws SQLException {
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
+            String sql = "DELETE FROM " + tableName; // SQL query to delete all data from the table
+            stmt.executeUpdate(sql); // execute the SQL query
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+   public boolean blockStock(String symbol) throws SQLException {
+       Connection conn = null;
+       PreparedStatement stmt = null;
+
+       try {
+           conn = getConnection();
+           String sql = "UPDATE stocks SET isactive = ? WHERE symbol = ?";
+           stmt = conn.prepareStatement(sql);
+           stmt.setBoolean(1, false);
+           stmt.setString(2, symbol);
+           stmt.executeUpdate();
+           return true;
+       } catch (SQLException e) {
+           e.printStackTrace();
+           return false;
+       } finally {
+           if (stmt != null) {
+               stmt.close();
+           }
+           if (conn != null) {
+               conn.close();
+           }
+       }
+   }
 }

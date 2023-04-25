@@ -23,11 +23,15 @@ public class Customer extends User {
         return true;
     }
 
-    public void displayStockMarket(){
-
+    public boolean desposit(double amount){
+        this.baseCash += amount;
+        System.out.println("You desposited " + amount + " into your account.");
+        return true;
     }
 
-    public void displayOwnedStock(){
-
+    public boolean withdraw(double amount){
+        this.baseCash -= amount;
+        System.out.println("You withdrew " + amount + " from your account.");
+        return true;
     }
 }

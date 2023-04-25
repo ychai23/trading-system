@@ -7,6 +7,7 @@ public class CustomerMainPage extends JFrame{
     private JButton buyStockButton = new JButton("Buy Stock");
     private JButton sellStockButton = new JButton("Sell Stock");
     private JButton depositButton = new JButton("Deposit");
+    private JButton withdrawButton = new JButton("Withdraw");
     private JButton logoutButton = new JButton("Logout");
 
     public CustomerMainPage() {
@@ -18,6 +19,7 @@ public class CustomerMainPage extends JFrame{
         add(buyStockButton);
         add(sellStockButton);
         add(depositButton);
+        add(withdrawButton);
         add(logoutButton);
 
         buyStockButton.addActionListener(new ActionListener() {
@@ -39,6 +41,16 @@ public class CustomerMainPage extends JFrame{
         depositButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // redirect to despositpage
+                DepositPage dp = new DepositPage();
+                dp.setVisible(true);
+            }
+        });
+
+        withdrawButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // redirect to withdrawpage
+                WithdrawPage wp = new WithdrawPage();
+                wp.setVisible(true);
             }
         });
 
@@ -50,6 +62,8 @@ public class CustomerMainPage extends JFrame{
                         "You have logged Out",
                         "LOGGED Out",
                         JOptionPane.WARNING_MESSAGE);
+                MainPage mp = MainPage.getMainPage();
+                mp.setVisible(true);
             }
         });
     }

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 public class MainPage extends JFrame{
     private JButton loginButton = new JButton("Login");
     private JButton registerButton = new JButton("Register");
+    private static MainPage mp = null;
 
     public MainPage() {
         setTitle("Trading System");
@@ -39,5 +40,12 @@ public class MainPage extends JFrame{
                 }
             }
         });
+    }
+
+    public static MainPage getMainPage() {
+        if (mp == null) {
+            mp = new MainPage();
+        }
+        return mp;
     }
 }

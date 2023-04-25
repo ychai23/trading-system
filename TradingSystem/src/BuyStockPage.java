@@ -28,6 +28,13 @@ public class BuyStockPage extends JFrame{
         viewStockButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // display stocktable
+                Market market = null;
+                try {
+                    market = Market.getInstance();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                market.displayMarket();
             }
         });
 

@@ -57,8 +57,8 @@ public class UserRegister extends JFrame {
                     Manager manager = new Manager(fname, lname, email, password, "Manager");
                     if(manager.addUser()){
                         currentFrame.dispose();
-                        UserLoginPage loginPage = new UserLoginPage();
-                        loginPage.setVisible(true);
+                        MainPage mp = new MainPage();
+                        mp.setVisible(true);
                     }
 
                 }

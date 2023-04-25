@@ -48,6 +48,8 @@ public class ManagerMainPage extends JFrame {
                         "You have logged Out",
                         "LOGGED Out",
                         JOptionPane.WARNING_MESSAGE);
+                MainPage mp = MainPage.getMainPage();
+                mp.setVisible(true);
             }
         });
     }
