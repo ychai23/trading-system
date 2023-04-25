@@ -1,6 +1,7 @@
 import java.sql.*;
 
 public class User {
+    // user need id
     private String fname;
     private String lname;
     private String email;

@@ -43,6 +43,7 @@ public class Database {
         return rs;
     }
 
+    // add user to db
     public boolean addUserToDB(String fname, String lname, String email, String password, String role) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -67,6 +68,8 @@ public class Database {
             if (conn != null) { conn.close(); }
         }
     }
+
+    // check if a user in db
     public boolean checkUserInDB(String email, String password) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -91,6 +94,8 @@ public class Database {
             if (conn != null) { conn.close(); }
         }
     }
+
+    // show all users in db
     public void showUsers() throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
