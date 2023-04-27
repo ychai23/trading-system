@@ -24,7 +24,7 @@ public class Database {
         if (instance == null) {
             try {
                 // change this password to your own
-                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
+                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
     //            TradingSystemGUI gui = new TradingSystemGUI(db);
             } catch (SQLException e) {
                 System.err.println("Error: " + e.getMessage());
@@ -37,7 +37,7 @@ public class Database {
 
 
     public Connection getConnection() throws SQLException {
-        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
         return conn;
     }
 
@@ -72,6 +72,77 @@ public class Database {
             if (conn != null) { conn.close(); }
         }
     }
+    // get user.id from email
+    public int getUserID(String email) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT userid FROM Users WHERE `email` = ?");
+            stmt.setString(1, email);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("userid");
+            } else {
+                System.out.println("User not found.");
+                return -1;
+            }
+        } finally {
+            if (rs != null) { rs.close(); }
+            if (stmt != null) { stmt.close(); }
+            if (conn != null) { conn.close(); }
+        }
+    }
+    // make User object from database based on input userid
+    public User getUserFromID(int userid) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT * FROM Users WHERE `userid` = ?");
+            stmt.setInt(1, userid);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String fname = rs.getString("fname");
+                String lname = rs.getString("lname");
+                String email = rs.getString("email");
+                String password = rs.getString("password");
+                String role = rs.getString("role");
+                return new User(fname, lname, email, password, role);
+            } else {
+                System.out.println("User not found.");
+                return null;
+            }
+        } finally {
+            if (rs != null) { rs.close(); }
+            if (stmt != null) { stmt.close(); }
+            if (conn != null) { conn.close(); }
+        }
+    }
+    // set user isactive boolean to true and take user email
+    public void setUserActive(String email,boolean active) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("UPDATE Users SET isactive = ? WHERE email = ?");
+            stmt.setBoolean(1, active);
+            stmt.setString(2, email);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) { stmt.close(); }
+            if (conn != null) { conn.close(); }
+        }
+    }
+
+
 
     // check if a user in db
     public boolean checkUserInDB(String email, String password) throws SQLException {
@@ -97,33 +168,6 @@ public class Database {
             if (stmt != null) { stmt.close(); }
             if (conn != null) { conn.close(); }
         }
-    }
-
-    // show all users in db
-    public void showUsers() throws SQLException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            conn = getConnection();
-            stmt = conn.prepareStatement("SELECT * FROM Users");
-
-            // Retrieve all users from the Users table
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                String fname = rs.getString("fname");
-                String lname = rs.getString("lname");
-                String email = rs.getString("email");
-                System.out.println("First Name: " + fname + ", Email: " + email);
-            }
-
-        } finally {
-            if (rs != null) { rs.close(); }
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
-        }
-
-
     }
 
     // Method to check whether we have a Manager or not
@@ -187,12 +231,12 @@ public class Database {
 
         try {
             conn = getConnection();
-            stmt = conn.prepareStatement("INSERT INTO Stocks (name, symbol, price, isactive) VALUES (?,?, ?,?)");
+            stmt = conn.prepareStatement("INSERT INTO Stocks (name, symbol, price) VALUES (?,?, ?)");
             stmt.setString(1, stock.getName());
             stmt.setString(2, stock.getSymbol());
             stmt.setDouble(3, stock.getPrice());
-            stmt.setBoolean(4, stock.isActive());
             stmt.executeUpdate();
+            stock.setID(getStockId(stock.getSymbol()));
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -241,6 +285,7 @@ public class Database {
             while (rs.next()) {
                 Stock stock = new Stock(rs.getString("name"), rs.getString("symbol"),rs.getDouble("price"));
                 stock.setID(rs.getInt("stockid"));
+                stock.setSymbol(rs.getString("symbol"));
                 stock.setActive(rs.getBoolean("isactive"));
                 marketData.add(stock);
             }
@@ -249,6 +294,27 @@ public class Database {
         }
         return marketData;
     }
+    // getUserData
+    public List<User> getUserData() throws SQLException {
+        // create a list to hold all the user data
+        List<User> userData = new ArrayList<>();
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Users");
+        ResultSet rs = stmt.executeQuery()) {
+       while (rs.next()) {
+           User user = new User(rs.getString("fname"), rs.getString("lname"),rs.getString("email"),rs.getString("password"),rs.getString("role"));
+           if(rs.getBoolean("isactive") == true){
+               user.setActive();
+           }
+           else{
+               user.setInactive();
+           }
+           userData.add(user);
+       }
+   } catch (SQLException e) {
+       e.printStackTrace();
+   }
+   return userData;
+    }
 
     public void deleteTableData(String tableName) throws SQLException {
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
@@ -256,6 +322,31 @@ public class Database {
             stmt.executeUpdate(sql); // execute the SQL query
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    // get Stock Id from Symbol
+    public int getStockId(String symbol) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT stockid FROM Stocks WHERE symbol = ?");
+            stmt.setString(1, symbol);
+            rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                int stockid = rs.getInt("stockid");
+                return stockid;
+            } else {
+                return -1;
+            }
+        } finally {
+            if (rs != null) { rs.close(); }
+            if (stmt != null) { stmt.close(); }
+            if (conn != null) { conn.close(); }
         }
     }
 

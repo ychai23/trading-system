@@ -13,7 +13,7 @@ CREATE TABLE Users (
   email VARCHAR(100),
   role VARCHAR(50),
   password VARCHAR(100),
-  isactive BOOLEAN,
+  isactive BOOLEAN default 1,
 	PRIMARY KEY(userid)
 );
 
@@ -22,7 +22,7 @@ CREATE TABLE Stocks (
   name VARCHAR(50),
   symbol VARCHAR(50),
   price DECIMAL(10,2),
-  isactive BOOLEAN,
+  isactive BOOLEAN default 1,
   PRIMARY KEY(stockid)
 );
 

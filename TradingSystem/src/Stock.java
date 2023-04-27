@@ -15,16 +15,14 @@ public class Stock {
     private int ID;
 
     private boolean active;
-
-    // track the ID of stock;
-    private static int count = 0;
+    private Database db;
 
 
 
     public Stock(String name, String symbol ,double price){
+        this.db = Database.getInstance();
         this.name = name;
         this.price = price;
-        this.ID = ++count;
         this.symbol = symbol;
         this.active = true;
     }
@@ -35,6 +33,9 @@ public class Stock {
 
     public void setName(String name) {
         this.name = name;
+    }
+    public void setSymbol(String symbol){
+        this.symbol = symbol;
     }
 
     public void setPrice(double price) {

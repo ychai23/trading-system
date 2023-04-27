@@ -45,6 +45,23 @@ public class UserRegister extends JFrame {
 
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                // make sure none of the fields are empty
+                if (fnameTextField.getText().equals("") || lnameTextField.getText().equals("") || emailTextField.getText().equals("") || passwordTextField.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null,
+                            "Please fill out all fields.",
+                            "EMPTY FIELDS",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                // make sure the email is valid
+                if (!emailTextField.getText().contains("@")) {
+                    JOptionPane.showMessageDialog(null,
+                            "Please enter a valid email.",
+                            "INVALID EMAIL",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
                 String fname = fnameTextField.getText();
                 String lname = lnameTextField.getText();
                 String email = emailTextField.getText();
@@ -57,8 +74,8 @@ public class UserRegister extends JFrame {
                     Manager manager = new Manager(fname, lname, email, password, "Manager");
                     if(manager.addUser()){
                         currentFrame.dispose();
-                        MainPage mp = new MainPage();
-                        mp.setVisible(true);
+                        UserLoginPage loginPage = new UserLoginPage();
+                        loginPage.setVisible(true);
                     }
 
                 }

@@ -35,7 +35,12 @@ public class ManagerMainPage extends JFrame {
         manageStocksButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // redirect to manage stocks page
-                ManageStocksPage msp = new ManageStocksPage();
+                ManageStocksPage msp = null;
+                try {
+                    msp = new ManageStocksPage();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
                 msp.setVisible(true);
             }
         });

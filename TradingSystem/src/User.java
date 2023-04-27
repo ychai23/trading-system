@@ -1,21 +1,29 @@
 import java.sql.*;
 
+
 public class User {
-    // user need id
+    private Database db;
+    private int id;
     private String fname;
     private String lname;
     private String email;
     private String password;
     private String role;
+    private boolean active;
 
     public User(String fname, String lname,String email, String password, String role) {
+        this.db = Database.getInstance();
         this.fname = fname;
         this.lname = lname;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.active = true;
     }
      // Getters
+    public int getId() {
+        return id;
+    }
     public String getFname() {
         return fname;
     }
@@ -53,6 +61,7 @@ public class User {
         try {
             if(db.addUserToDB(fname, lname, email, password, role)){
                 System.out.println("User added to database!");
+                this.id = db.getUserID(email);
                 return true;
             }
         } catch (SQLException e) {
@@ -61,6 +70,26 @@ public class User {
         }
         return false;
     }
+    public boolean isActive() {
+        return active;
+    }
+    public void setActive() {
+        try {
+            db.setUserActive(this.email,true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        this.active = true;
+    }
+    public void setInactive() {
+        try {
+            db.setUserActive(this.email,false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        this.active = false;
+    }
+
 
 
 }
