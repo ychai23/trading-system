@@ -4,18 +4,17 @@ import java.awt.event.*;
 import java.sql.SQLException;
 
 public class AddStockPage extends JFrame {
-    private Database db;
+    private ManagerService ms;
     private JTextField nameField = new JTextField(20);
     private JTextField priceField = new JTextField(10);
     private JTextField symbolField = new JTextField(10);
     private JButton addButton = new JButton("Add Stock");
 
     public AddStockPage() throws SQLException {
-        this.db = Database.getInstance();
+        this.ms = ManagerService.getInstance();
 
         setTitle("Add Stock");
         setSize(400, 150);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Create a panel to hold the input fields and button
         JPanel panel = new JPanel(new GridLayout(4, 2, 5, 5));
@@ -38,14 +37,8 @@ public class AddStockPage extends JFrame {
             double price = Double.parseDouble(priceField.getText().trim());
 
             // Add the new stock to the database
-            try {
-                Stock stock = new Stock(name,symbol,price);
-                db.addStockToMarket(stock);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error adding stock: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+            Stock stock = new Stock(name,symbol,price);
+            ms.addStockToMarket(stock);
 
             // Display a success message and close the window
             JOptionPane.showMessageDialog(this, "Stock added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);

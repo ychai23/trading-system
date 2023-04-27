@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
+import java.util.List;
 
 public class SellStockPage extends JFrame{
     private Database db;
@@ -29,7 +30,12 @@ public class SellStockPage extends JFrame{
 
         viewOwnedStockButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // display stocktable owned by user
+                // display stocktable owned by user tbd
+                try {
+                    List<Stock> owned = db.getOwnedStocks(1);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 

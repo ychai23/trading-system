@@ -43,7 +43,8 @@ public class UserLoginPage extends JFrame {
                             mmp.setVisible(true);
                         }
                         else{
-                            CustomerMainPage cmp = new CustomerMainPage();
+                            Customer c = db.getCustomer();
+                            CustomerMainPage cmp = new CustomerMainPage(c);
                             cmp.setVisible(true);
                         }
 

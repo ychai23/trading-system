@@ -3,14 +3,14 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class DepositPage extends JFrame {
-    private Database db;
+    private CustomerService cs;
     private JLabel amountLabel = new JLabel("Enter amount to withdraw");
     private JTextField amountTextField = new JTextField();
     private JButton depositButton = new JButton("Confirm Deposit");
     private JButton cancelButton = new JButton("Cancel");
 
-    public DepositPage() {
-        this.db = Database.getInstance();
+    public DepositPage(CustomerService cs) {
+        this.cs = cs;
         setTitle("Withdraw Page");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -21,7 +21,8 @@ public class DepositPage extends JFrame {
 
         depositButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // confirm withdraw and withdraws
+                // confirm deposit and deposit
+                cs.deposit(Double.parseDouble(amountTextField.getText()));
             }
         });
 

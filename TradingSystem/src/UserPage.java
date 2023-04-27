@@ -48,7 +48,6 @@ public class UserPage extends JFrame {
         // Set frame properties
         this.setTitle("User Page");
         this.setSize(300, 150);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
 

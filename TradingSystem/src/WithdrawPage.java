@@ -4,13 +4,13 @@ import java.awt.event.*;
 import java.sql.SQLException;
 
 public class WithdrawPage extends JFrame{
-    private Database db;
+    private CustomerService cs;
     private JLabel amountLabel = new JLabel("Enter amount to withdraw");
     private JTextField amountTextField = new JTextField();
     private JButton withdrawButton = new JButton("Confirm Withdraw");
     private JButton cancelButton = new JButton("Cancel");
-    public WithdrawPage() {
-        this.db = Database.getInstance();
+    public WithdrawPage(CustomerService cs) {
+        this.cs = cs;
         setTitle("Withdraw Page");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -22,6 +22,7 @@ public class WithdrawPage extends JFrame{
         withdrawButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // confirm withdraw and withdraws
+                cs.withdraw(Double.parseDouble(amountTextField.getText()));
             }
         });
 

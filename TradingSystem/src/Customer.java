@@ -23,15 +23,15 @@ public class Customer extends User {
         return true;
     }
 
-    public boolean desposit(double amount){
+    public double desposit(double amount){
         this.baseCash += amount;
         System.out.println("You desposited " + amount + " into your account.");
-        return true;
+        return this.baseCash;
     }
 
-    public boolean withdraw(double amount){
+    public double withdraw(double amount){
         this.baseCash -= amount;
         System.out.println("You withdrew " + amount + " from your account.");
-        return true;
+        return this.baseCash;
     }
 }

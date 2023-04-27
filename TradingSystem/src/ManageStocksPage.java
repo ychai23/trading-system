@@ -6,52 +6,47 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class ManageStocksPage extends JFrame {
-    private Database db;
+    private ManagerService ms;
     private JTable table;
     private JButton backButton = new JButton("Back");
     private JButton addStockButton = new JButton("Add Stock");
 
     public ManageStocksPage() throws SQLException {
-        this.db = Database.getInstance();
+        this.ms = ManagerService.getInstance();
 
         setTitle("Manage Stocks");
         setSize(600, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Create a panel to hold the JTable component
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-        try {
-            List<Stock> stockList = this.db.getMarketData();
+        List<Stock> stockList = this.ms.getMarketData();
 
-            // Create a DefaultTableModel object to hold the data
-            DefaultTableModel model = new DefaultTableModel();
+        // Create a DefaultTableModel object to hold the data
+        DefaultTableModel model = new DefaultTableModel();
 
-            // Get the column names from the ResultSet metadata
-            int numColumns = 4;
-            model.addColumn("ID");
-            model.addColumn("Name");
-            model.addColumn("Symbol");
-            model.addColumn("Price");
+        // Get the column names from the ResultSet metadata
+        int numColumns = 4;
+        model.addColumn("ID");
+        model.addColumn("Name");
+        model.addColumn("Symbol");
+        model.addColumn("Price");
 
-            for (Stock stock : stockList){
-                if (!stock.isActive()){
-                    continue;
-                }
-                Object[] rowData = new Object[numColumns];
-                rowData[0] = stock.getID();
-                rowData[1] = stock.getName();
-                rowData[2] = stock.getSymbol();
-                rowData[3] = stock.getPrice();
-                model.addRow(rowData);
+        for (Stock stock : stockList){
+            if (!stock.isActive()){
+                continue;
             }
-
-            // Create the JTable with the DefaultTableModel
-            table = new JTable(model);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            Object[] rowData = new Object[numColumns];
+            rowData[0] = stock.getID();
+            rowData[1] = stock.getName();
+            rowData[2] = stock.getSymbol();
+            rowData[3] = stock.getPrice();
+            model.addRow(rowData);
         }
+
+        // Create the JTable with the DefaultTableModel
+        table = new JTable(model);
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
 
         // Add the panel to the JFrame

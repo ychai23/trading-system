@@ -3,15 +3,15 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class CustomerMainPage extends JFrame{
-    private Database db;
+    private CustomerService cs;
     private JButton buyStockButton = new JButton("Buy Stock");
     private JButton sellStockButton = new JButton("Sell Stock");
     private JButton depositButton = new JButton("Deposit");
     private JButton withdrawButton = new JButton("Withdraw");
     private JButton logoutButton = new JButton("Logout");
 
-    public CustomerMainPage() {
-        this.db = Database.getInstance();
+    public CustomerMainPage(Customer c) {
+        this.cs = new CustomerService(Database.getInstance(), c);
         setTitle("Welcome to your trading page!");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,7 +41,7 @@ public class CustomerMainPage extends JFrame{
         depositButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // redirect to despositpage
-                DepositPage dp = new DepositPage();
+                DepositPage dp = new DepositPage(cs);
                 dp.setVisible(true);
             }
         });
@@ -49,7 +49,7 @@ public class CustomerMainPage extends JFrame{
         withdrawButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // redirect to withdrawpage
-                WithdrawPage wp = new WithdrawPage();
+                WithdrawPage wp = new WithdrawPage(cs);
                 wp.setVisible(true);
             }
         });

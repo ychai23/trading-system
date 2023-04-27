@@ -24,8 +24,7 @@ public class Database {
         if (instance == null) {
             try {
                 // change this password to your own
-                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
-    //            TradingSystemGUI gui = new TradingSystemGUI(db);
+                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
             } catch (SQLException e) {
                 System.err.println("Error: " + e.getMessage());
             } catch (ClassNotFoundException e) {
@@ -37,7 +36,7 @@ public class Database {
 
 
     public Connection getConnection() throws SQLException {
-        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
         return conn;
     }
 
@@ -142,8 +141,6 @@ public class Database {
         }
     }
 
-
-
     // check if a user in db
     public boolean checkUserInDB(String email, String password) throws SQLException {
         Connection conn = null;
@@ -171,7 +168,6 @@ public class Database {
     }
 
     // Method to check whether we have a Manager or not
-
     public boolean managerExists() throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -225,6 +221,8 @@ public class Database {
     public void close() throws SQLException {
         conn.close();
     }
+
+    // add stock to market
     public boolean addStockToMarket(Stock stock) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -251,6 +249,7 @@ public class Database {
         }
     }
 
+    // update stock price
     public boolean updateStockPrice(Stock updatedStock, double price) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -278,6 +277,7 @@ public class Database {
 
     }
 
+    // get market data
     public List<Stock> getMarketData() throws SQLException {
         List<Stock> marketData = new ArrayList<>();
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Stocks");
@@ -294,26 +294,27 @@ public class Database {
         }
         return marketData;
     }
+
     // getUserData
-    public List<User> getUserData() throws SQLException {
+    public List<User> getUsersData() throws SQLException {
         // create a list to hold all the user data
         List<User> userData = new ArrayList<>();
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Users");
-        ResultSet rs = stmt.executeQuery()) {
-       while (rs.next()) {
-           User user = new User(rs.getString("fname"), rs.getString("lname"),rs.getString("email"),rs.getString("password"),rs.getString("role"));
-           if(rs.getBoolean("isactive") == true){
-               user.setActive();
-           }
-           else{
-               user.setInactive();
-           }
-           userData.add(user);
-       }
-   } catch (SQLException e) {
-       e.printStackTrace();
-   }
-   return userData;
+            ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                User user = new User(rs.getString("fname"), rs.getString("lname"),rs.getString("email"),rs.getString("password"),rs.getString("role"));
+                if(rs.getBoolean("isactive") == true){
+                    user.setActive();
+                }
+                else{
+                    user.setInactive();
+                }
+                userData.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userData;
     }
 
     public void deleteTableData(String tableName) throws SQLException {
@@ -350,7 +351,8 @@ public class Database {
         }
     }
 
-   public boolean blockStock(String symbol) throws SQLException {
+    // block stock
+    public boolean blockStock(String symbol) throws SQLException {
        Connection conn = null;
        PreparedStatement stmt = null;
 
@@ -374,4 +376,106 @@ public class Database {
            }
        }
    }
+
+
+   // Customer Methods
+
+
+   public Customer getCustomer() throws SQLException {
+        Customer c = null;
+        // create a list to hold all the user data
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Users");
+            ResultSet rs = stmt.executeQuery()) {
+                c = new Customer(rs.getString("fname"), rs.getString("lname"),rs.getString("email"),rs.getString("password"),rs.getString("role"));
+                if(rs.getBoolean("isactive") == true){
+                    c.setActive();
+                }
+                else{
+                    c.setInactive();
+                }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return c;
+    }
+
+   // get owned stock data
+   public List<Stock> getOwnedStocks(int userid) throws SQLException {
+        List<Stock> owned = new ArrayList<>();
+        try {
+            Connection conn = getConnection(); 
+            String sql = "SELECT * FROM userStock WHERE userid = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, userid);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Stock stock = new Stock(rs.getString("name"), rs.getString("symbol"),rs.getDouble("price"));
+                stock.setID(rs.getInt("stockid"));
+                stock.setSymbol(rs.getString("symbol"));
+                stock.setActive(rs.getBoolean("isactive"));
+                owned.add(stock);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return owned;
+    }
+
+    // update basemoney
+    public boolean updateBase(double newBaseCash, int userid) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+ 
+        try {
+            conn = getConnection();
+            String sql = "UPDATE users SET baseCash = ? WHERE userid = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setDouble(1, newBaseCash);
+            stmt.setInt(2, userid);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+    
+    // buy stock
+    public boolean buyStock(Stock stock) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("INSERT INTO userStock (name, symbol, price) VALUES (?,?, ?)");
+            stmt.setString(1, stock.getName());
+            stmt.setString(2, stock.getSymbol());
+            stmt.setDouble(3, stock.getPrice());
+            stmt.executeUpdate();
+            stock.setID(getStockId(stock.getSymbol()));
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    // sell stock
+
+
+   
 }
