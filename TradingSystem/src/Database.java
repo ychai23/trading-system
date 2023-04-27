@@ -53,12 +53,13 @@ public class Database {
 
         try {
             conn = getConnection();
-            stmt = conn.prepareStatement("INSERT INTO Users (fname, lname, email, password,role) VALUES (?, ?, ?, ?, ?)");
+            stmt = conn.prepareStatement("INSERT INTO Users (fname, lname, email, password, role, baseCash) VALUES (?, ?, ?, ?, ?)");
             stmt.setString(1, fname);
             stmt.setString(2, lname);
             stmt.setString(3, email);
             stmt.setString(4, password);
             stmt.setString(5, role);
+            stmt.setDouble(5, 0.0);
             stmt.executeUpdate();
             return true;
         }
