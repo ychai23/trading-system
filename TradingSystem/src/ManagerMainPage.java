@@ -19,6 +19,7 @@ public class ManagerMainPage extends JFrame {
         add(manageStocksButton);
         add(logoutButton);
 
+
         manageUsersButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // redirect to manage users page
@@ -31,6 +32,7 @@ public class ManagerMainPage extends JFrame {
                 mup.setVisible(true);
             }
         });
+
 
         manageStocksButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

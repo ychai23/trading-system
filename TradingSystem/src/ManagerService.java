@@ -103,6 +103,13 @@ public class ManagerService implements ManagerServiceInterface{
             throw new RuntimeException(e);
         }
     }
+    public Stock getStockFromID(int stockid){
+        try {
+            return this.db.getStockFromID(stockid);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
 }

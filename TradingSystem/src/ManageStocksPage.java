@@ -8,8 +8,11 @@ import java.util.List;
 public class ManageStocksPage extends JFrame {
     private ManagerService ms;
     private JTable table;
-    private JButton backButton = new JButton("Back");
     private JButton addStockButton = new JButton("Add Stock");
+    // cancel button
+    private JButton cancelButton = new JButton("Cancel");
+    private JTextField idField = new JTextField(10);
+    private JButton viewStockButton = new JButton("View Stock");
 
     public ManageStocksPage() throws SQLException {
         this.ms = ManagerService.getInstance();
@@ -27,21 +30,22 @@ public class ManageStocksPage extends JFrame {
         DefaultTableModel model = new DefaultTableModel();
 
         // Get the column names from the ResultSet metadata
-        int numColumns = 4;
+        int numColumns = 5;
         model.addColumn("ID");
         model.addColumn("Name");
         model.addColumn("Symbol");
         model.addColumn("Price");
+        model.addColumn("Status");
+
 
         for (Stock stock : stockList){
-            if (!stock.isActive()){
-                continue;
-            }
             Object[] rowData = new Object[numColumns];
             rowData[0] = stock.getID();
             rowData[1] = stock.getName();
             rowData[2] = stock.getSymbol();
             rowData[3] = stock.getPrice();
+            rowData[4] = stock.isActive();
+
             model.addRow(rowData);
         }
 
@@ -53,11 +57,10 @@ public class ManageStocksPage extends JFrame {
         add(panel);
 
         // Add action listener to back button
-        backButton.addActionListener(e -> {
+        cancelButton.addActionListener(e -> {
             setVisible(false);
             dispose();
         });
-
         // Add action listener to add stock button
         addStockButton.addActionListener(e -> {
             // Open the AddStockPage
@@ -67,14 +70,31 @@ public class ManageStocksPage extends JFrame {
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
+            setVisible(false);
+        });
+        viewStockButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int stockID = Integer.parseInt(idField.getText());
+                Stock stock = ms.getStockFromID(stockID);
+                if(stock == null){
+                    JOptionPane.showMessageDialog(null, "Stock not found");
+                    return;
+                }
+                StockPage stockPage = new StockPage(stock);
+                stockPage.setVisible(true);
+                setVisible(false);
+            }
         });
 
         // Create a panel to hold the buttons
-        JPanel buttonPanel = new JPanel(new FlowLayout());
-        buttonPanel.add(backButton);
-        buttonPanel.add(addStockButton);
-
-        // Add the button panel to the bottom of the JFrame
-        add(buttonPanel, BorderLayout.SOUTH);
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(1, 3));
+        inputPanel.add(new JLabel("Enter Stock ID:"));
+        inputPanel.add(idField);
+        inputPanel.add(viewStockButton);
+        inputPanel.add(addStockButton);
+        inputPanel.add(cancelButton);
+        panel.add(inputPanel, BorderLayout.SOUTH);
     }
+
 }

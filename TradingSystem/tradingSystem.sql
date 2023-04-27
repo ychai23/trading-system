@@ -14,7 +14,7 @@ CREATE TABLE Users (
   role VARCHAR(50),
   password VARCHAR(100),
   isactive BOOLEAN default 1,
-  double baseCash DECIMAL(10,2),
+  baseCash DECIMAL(10,2),
 	PRIMARY KEY(userid)
 );
 

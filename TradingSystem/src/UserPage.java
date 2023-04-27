@@ -17,6 +17,22 @@ public class UserPage extends JFrame {
         JTextField emailField = new JTextField(user.getEmail());
         emailField.setEditable(false);
 
+        // cancel button
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // redirect to ManageUsersPage
+                ManageUsersPage mup = null;
+                try {
+                    mup = new ManageUsersPage();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                mup.setVisible(true);
+                setVisible(false);
+            }
+        });
+
         // Create JButton to deactivate user
         JButton deactivateButton = new JButton("Deactivate User");
         deactivateButton.addActionListener(new ActionListener() {
@@ -41,6 +57,7 @@ public class UserPage extends JFrame {
         panel.add(emailLabel);
         panel.add(emailField);
         panel.add(deactivateButton);
+        panel.add(cancelButton);
 
         // Add panel to frame
         this.add(panel);

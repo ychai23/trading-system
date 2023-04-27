@@ -16,13 +16,14 @@ public class UserRegister extends JFrame {
     private JTextField passwordTextField = new JTextField();
     private JCheckBox managerCheckBox = new JCheckBox("Register as Manager");
     private JButton addButton = new JButton("Add User");
+    private JButton cancelButton = new JButton("Cancel");
 
     public UserRegister() throws SQLException {
         this.db = Database.getInstance();
         setTitle("Register a new user");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(5, 2));
+        setLayout(new GridLayout(6, 2));
         add(fnameLabel);
         add(fnameTextField);
         add(lnameLabel);
@@ -33,6 +34,7 @@ public class UserRegister extends JFrame {
         add(passwordTextField);
         add(managerCheckBox);
         add(addButton);
+        add(cancelButton);
 
         // initially enable the manager checkbox
         managerCheckBox.setEnabled(true);
@@ -43,6 +45,14 @@ public class UserRegister extends JFrame {
             managerCheckBox.setEnabled(false);
         } 
 
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // redirect to main page
+                MainPage mainPage = new MainPage();
+                mainPage.setVisible(true);
+                setVisible(false);
+            }
+        });
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // make sure none of the fields are empty

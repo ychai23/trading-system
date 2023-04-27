@@ -19,4 +19,7 @@ public interface ManagerServiceInterface {
     public boolean blockStock(String symbol);
     // get market data
 
+    //get stock from id
+    public Stock getStockFromID(int stockid);
+
 }

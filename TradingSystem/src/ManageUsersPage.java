@@ -9,7 +9,7 @@ import java.util.List;
 public class ManageUsersPage extends JFrame {
     private ManagerService ms;
     private JTable table;
-    private JButton backButton = new JButton("Back");
+    private JButton cancelButton = new JButton("Cancel");
     private JTextField idField = new JTextField(10);
     private JButton viewButton = new JButton("View User");
 
@@ -64,10 +64,12 @@ public class ManageUsersPage extends JFrame {
         // go to user page by having a text box where you can enter the user id
         // Add user input fields to the panel
         JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(1, 3));
+
         inputPanel.add(new JLabel("Enter User ID:"));
         inputPanel.add(idField);
         inputPanel.add(viewButton);
-
+        inputPanel.add(cancelButton);
         panel.add(inputPanel, BorderLayout.SOUTH);
 
         // Add action listener to view button
@@ -85,13 +87,12 @@ public class ManageUsersPage extends JFrame {
                 }
             }
         });
-        
-        // add a new user
-
-        // Add action listener to back button
-        backButton.addActionListener(e -> {
+        cancelButton.addActionListener(e -> {
             setVisible(false);
             dispose();
         });
+        
+        // add a new user
+
     }
 }

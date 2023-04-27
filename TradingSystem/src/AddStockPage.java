@@ -40,10 +40,14 @@ public class AddStockPage extends JFrame {
             Stock stock = new Stock(name,symbol,price);
             ms.addStockToMarket(stock);
 
-            // Display a success message and close the window
-            JOptionPane.showMessageDialog(this, "Stock added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
-            setVisible(false);
-            dispose();
+            // open the manage stocks page
+            try {
+                ManageStocksPage msp = new ManageStocksPage();
+                msp.setVisible(true);
+                setVisible(false);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         });
         add(addButton, BorderLayout.SOUTH);
     }

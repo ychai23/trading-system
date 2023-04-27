@@ -24,7 +24,7 @@ public class Database {
         if (instance == null) {
             try {
                 // change this password to your own
-                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
+                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
             } catch (SQLException e) {
                 System.err.println("Error: " + e.getMessage());
             } catch (ClassNotFoundException e) {
@@ -36,7 +36,7 @@ public class Database {
 
 
     public Connection getConnection() throws SQLException {
-        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
         return conn;
     }
 
@@ -323,6 +323,33 @@ public class Database {
             stmt.executeUpdate(sql); // execute the SQL query
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+    //get Stock from Stock ID
+    public Stock getStockFromID(int stockid) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT * FROM Stocks WHERE stockid = ?");
+            stmt.setInt(1, stockid);
+            rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                Stock stock = new Stock(rs.getString("name"), rs.getString("symbol"),rs.getDouble("price"));
+                stock.setID(rs.getInt("stockid"));
+                stock.setSymbol(rs.getString("symbol"));
+                stock.setActive(rs.getBoolean("isactive"));
+                return stock;
+            } else {
+                return null;
+            }
+        } finally {
+            if (rs != null) { rs.close(); }
+            if (stmt != null) { stmt.close(); }
+            if (conn != null) { conn.close(); }
         }
     }
 

@@ -10,6 +10,7 @@ public class UserLoginPage extends JFrame {
     private JLabel passwordLabel = new JLabel("Password:");
     private JTextField passwordTextField = new JTextField();
     private JButton loginButton = new JButton("Login");
+    private JButton cancelButton = new JButton("Cancel");
 
     public UserLoginPage() {
         this.db = Database.getInstance();
@@ -22,7 +23,15 @@ public class UserLoginPage extends JFrame {
         add(passwordLabel);
         add(passwordTextField);
         add(loginButton);
-
+        add(cancelButton);
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // redirect to main page
+                MainPage mainPage = new MainPage();
+                mainPage.setVisible(true);
+                setVisible(false);
+            }
+        });
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String email = emailTextField.getText();
