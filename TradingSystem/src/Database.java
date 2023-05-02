@@ -7,6 +7,7 @@ Class handles all database operations.
 import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Database {
@@ -468,14 +469,16 @@ public class Database {
     public boolean updateBase(double newBaseCash, int userid) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
- 
+
         try {
             conn = getConnection();
-            String sql = "UPDATE users SET baseCash = ? WHERE userid = ?";
+            String sql = "UPDATE Users SET baseCash = ? WHERE userid = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setDouble(1, newBaseCash);
             stmt.setInt(2, userid);
+            System.out.println(userid);
             stmt.executeUpdate();
+            System.out.println("ADDED TO DB");
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -515,6 +518,49 @@ public class Database {
                 conn.close();
             }
         }
+    }
+
+    public double getBuyPrice(int userid, int stockid) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT buyPrice FROM userStock WHERE (stockid = ? AND userid = ?) ");
+            stmt.setInt(1, stockid);
+            stmt.setInt(2, userid);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                double stockBuyPrice = rs.getInt("buyPrice");
+                return stockBuyPrice;
+            } else {
+                return -1;
+            }
+        } finally {
+            if (rs != null) { rs.close(); }
+            if (stmt != null) { stmt.close(); }
+            if (conn != null) { conn.close(); }
+        }
+    }
+    public HashMap<Integer, Integer> getUserStockQuantity(int userid) throws  SQLException{
+        HashMap<Integer,Integer> stockIDQuantity = new HashMap<Integer, Integer>();
+        try {
+            Connection conn = getConnection();
+
+            String sql = "SELECT * FROM userStock  WHERE userid = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, userid);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int stockid = rs.getInt("stockid");
+                int currentQuantity = stockIDQuantity.getOrDefault(stockid, 0);
+                stockIDQuantity.put(stockid, currentQuantity + rs.getInt("quantity"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return stockIDQuantity;
     }
 
     // sell stock

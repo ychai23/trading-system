@@ -35,7 +35,7 @@ public class CustomerMainPage extends JFrame{
         sellStockButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // redirect to sellstockpage
-                SellStockPage ssp = new SellStockPage();
+                SellStockPage ssp = new SellStockPage(cs);
                 ssp.setVisible(true);
             }
         });

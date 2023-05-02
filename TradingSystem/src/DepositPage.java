@@ -17,6 +17,7 @@ public class DepositPage extends JFrame {
         setLayout(new GridLayout(5, 2));
         add(amountLabel);
         add(amountTextField);
+        add(depositButton);
         add(cancelButton);
 
         depositButton.addActionListener(new ActionListener() {

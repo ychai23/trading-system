@@ -46,4 +46,8 @@ public class CustomerService implements CustomerServiceInterface{
             throw new RuntimeException(e);
         }
     }
+
+    public Customer getCustomer(){
+        return this.c;
+    }
 }

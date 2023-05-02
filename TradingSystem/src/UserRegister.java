@@ -81,21 +81,29 @@ public class UserRegister extends JFrame {
 
 
                 if(managerCheckBox.isSelected()){
-                    Manager manager = new Manager(fname, lname, email, password, "Manager");
-                    if(manager.addUser()){
-                        currentFrame.dispose();
-                        UserLoginPage loginPage = new UserLoginPage();
-                        loginPage.setVisible(true);
+                    try {
+                        if(db.addUserToDB(fname, lname, email, password, "Manager")){
+                            Manager manager = new Manager(fname, lname, email, password, "Manager");
+                            currentFrame.dispose();
+                            UserLoginPage loginPage = new UserLoginPage();
+                            loginPage.setVisible(true);
+                        }
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
                     }
 
                 }
                 else{
                     // registering new customer
                     Customer customer = new Customer(fname, lname, email, password, "Customer",0,0);
-                    if(customer.addUser()){
-                        currentFrame.dispose();
-                        UserLoginPage loginPage = new UserLoginPage();
-                        loginPage.setVisible(true);
+                    try {
+                        if(db.addUserToDB(fname, lname, email, password, "Customer")){
+                            currentFrame.dispose();
+                            UserLoginPage loginPage = new UserLoginPage();
+                            loginPage.setVisible(true);
+                        }
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
                     }
                 }
             }

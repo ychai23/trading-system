@@ -17,6 +17,7 @@ public class WithdrawPage extends JFrame{
         setLayout(new GridLayout(5, 2));
         add(amountLabel);
         add(amountTextField);
+        add(withdrawButton);
         add(cancelButton);
 
         withdrawButton.addActionListener(new ActionListener() {

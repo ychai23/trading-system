@@ -19,6 +19,12 @@ public class User {
         this.password = password;
         this.role = role;
         this.active = true;
+        try {
+            this.id = db.getUserID(email);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
      // Getters
     public int getId() {
@@ -61,7 +67,6 @@ public class User {
         try {
             if(db.addUserToDB(fname, lname, email, password, role)){
                 System.out.println("User added to database!");
-                this.id = db.getUserID(email);
                 return true;
             }
         } catch (SQLException e) {
