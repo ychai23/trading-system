@@ -4,7 +4,7 @@ import java.awt.event.*;
 
 public class DepositPage extends JFrame {
     private CustomerService cs;
-    private JLabel amountLabel = new JLabel("Enter amount to withdraw");
+    private JLabel amountLabel = new JLabel("Enter amount to deposit");
     private JTextField amountTextField = new JTextField();
     private JButton depositButton = new JButton("Confirm Deposit");
     private JButton cancelButton = new JButton("Cancel");
