@@ -11,7 +11,7 @@ public class DepositPage extends JFrame {
 
     public DepositPage(CustomerService cs) {
         this.cs = cs;
-        setTitle("Withdraw Page");
+        setTitle("Deposit Page");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(5, 2));
