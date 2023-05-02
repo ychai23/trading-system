@@ -13,7 +13,7 @@ public class CustomerMainPage extends JFrame{
 
     public CustomerMainPage(Customer c) {
         this.cs = new CustomerService(Database.getInstance(), c);
-        setTitle("Welcome to your trading page!");
+        setTitle("Welcome to your trading page " + c.getFname() + "!");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(2, 3));

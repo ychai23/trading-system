@@ -53,13 +53,14 @@ public class Database {
 
         try {
             conn = getConnection();
-            stmt = conn.prepareStatement("INSERT INTO Users (fname, lname, email, password, role, baseCash) VALUES (?, ?, ?, ?, ?)");
+            stmt = conn.prepareStatement("INSERT INTO Users (fname, lname, email, password, role, baseCash,deposit) VALUES (?, ?, ?, ?, ?,?,?)");
             stmt.setString(1, fname);
             stmt.setString(2, lname);
             stmt.setString(3, email);
             stmt.setString(4, password);
             stmt.setString(5, role);
-            stmt.setDouble(5, 0.0);
+            stmt.setDouble(6, 0.0);
+            stmt.setDouble(7, 0.0);
             stmt.executeUpdate();
             return true;
         }
@@ -410,9 +411,35 @@ public class Database {
     
     // getting the user role with an input of email
     public Customer getCustomer(String email) throws SQLException {
-        int customerID = this.getUserID(email);
-        Customer c = (Customer) (this.getUserFromID(customerID));
-        return c;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT * FROM Users WHERE `email` = ?");
+            stmt.setString(1, email);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+
+                String fname = rs.getString("fname");
+                String lname = rs.getString("lname");
+                String password = rs.getString("password");
+                String role = rs.getString("role");
+                double baseCash = rs.getDouble("baseCash");
+                double deposit = rs.getDouble("deposit");
+
+                return new Customer(fname, lname, email, password, role,baseCash,deposit);
+            } else {
+                System.out.println("User not found.");
+                return null;
+            }
+        } finally {
+            if (rs != null) { rs.close(); }
+            if (stmt != null) { stmt.close(); }
+            if (conn != null) { conn.close(); }
+        }
     }
 
    // get owned stock data

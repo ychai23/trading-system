@@ -90,7 +90,8 @@ public class UserRegister extends JFrame {
 
                 }
                 else{
-                    Customer customer = new Customer(fname, lname, email, password, "Customer");
+                    // registering new customer
+                    Customer customer = new Customer(fname, lname, email, password, "Customer",0,0);
                     if(customer.addUser()){
                         currentFrame.dispose();
                         UserLoginPage loginPage = new UserLoginPage();

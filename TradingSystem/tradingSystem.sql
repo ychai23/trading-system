@@ -14,8 +14,9 @@ CREATE TABLE Users (
   role VARCHAR(50),
   password VARCHAR(100),
   isactive BOOLEAN default 1,
-  baseCash DECIMAL(10,2),
-	PRIMARY KEY(userid)
+  baseCash DECIMAL(10,2) default 0,
+  deposit DECIMAL(10,2) default 0,
+  PRIMARY KEY(userid)
 );
 
 CREATE TABLE Stocks (
