@@ -406,24 +406,12 @@ public class Database {
    }
 
 
-   // Customer Methods
-
-
-   public Customer getCustomer() throws SQLException {
-        Customer c = null;
-        // create a list to hold all the user data
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Users");
-            ResultSet rs = stmt.executeQuery()) {
-                c = new Customer(rs.getString("fname"), rs.getString("lname"),rs.getString("email"),rs.getString("password"),rs.getString("role"));
-                if(rs.getBoolean("isactive") == true){
-                    c.setActive();
-                }
-                else{
-                    c.setInactive();
-                }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    // Customer Methods
+    
+    // getting the user role with an input of email
+    public Customer getCustomer(String email) throws SQLException {
+        int customerID = this.getUserID(email);
+        Customer c = (Customer) (this.getUserFromID(customerID));
         return c;
     }
 
@@ -503,7 +491,5 @@ public class Database {
     }
 
     // sell stock
-
-
    
 }
