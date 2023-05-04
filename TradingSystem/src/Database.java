@@ -409,6 +409,58 @@ public class Database {
 
 
     // Customer Methods
+
+    // update password
+    public boolean updatePW(int userid, String pw) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "UPDATE Users SET password = ? WHERE userid = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, pw);
+            stmt.setInt(2, userid);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    // update email
+    public boolean updateEmail(int userid, String email) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "UPDATE Users SET email = ? WHERE userid = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, email);
+            stmt.setInt(2, userid);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
     
     // getting the user role with an input of email
     public Customer getCustomer(String email) throws SQLException {
@@ -666,7 +718,7 @@ public class Database {
     }
 
     // buy stock
-    public boolean buyStock(int userid, int stockID, int buyQuantity) throws SQLException {
+    public double buyStock(int userid, int stockID, int buyQuantity) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
 
@@ -700,11 +752,11 @@ public class Database {
             stmt.setDouble(1, spent);
             stmt.setInt(2, userid);
             stmt.executeUpdate();
-            return true;
+            return spent;
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return 1;
         } finally {
             if (stmt != null) {
                 stmt.close();
@@ -716,7 +768,7 @@ public class Database {
     }
 
     // sell stock
-    public boolean sellStock(int userid, int stockID, int sellQuantity) throws SQLException {
+    public double sellStock(int userid, int stockID, int sellQuantity) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
 
@@ -739,11 +791,10 @@ public class Database {
             stmt.setDouble(1, earning);
             stmt.setInt(2, userid);
             stmt.executeUpdate();
-
-            return true;
+            return earning;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return 0;
         } finally {
             if (stmt != null) {
                 stmt.close();
