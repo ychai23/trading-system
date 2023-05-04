@@ -116,17 +116,33 @@ public class CustomerService implements CustomerServiceInterface{
         }
     }
 
-    public double getUnrealizedProfit() throws SQLException {
-        List<Stock> stockList = getOwnedStocks(this.userid);
-        HashMap<Integer, Integer> stockQuantity = this.db.getUserStockQuantity(this.userid);
+//    public double getUnrealizedProfit() throws SQLException {
+//        List<Stock> stockList = getOwnedStocks(this.userid);
+//        HashMap<Integer, Integer> stockQuantity = this.db.getUserStockQuantity(this.userid);
+//
+//        double unrealizedProfit = 0.0;
+//        for (Stock stock : stockList){
+//            int stockid = stock.getID();
+//            unrealizedProfit += stockQuantity.get(stockid) * this.db.getCurrentStockPrice(stockid);
+//            unrealizedProfit += this.db.getBalance(userid, stockid);
+//        }
+//        return unrealizedProfit;
+//
+//    }
 
-        double unrealizedProfit = 0.0;
-        for (Stock stock : stockList){
-            int stockid = stock.getID();
-            unrealizedProfit += stockQuantity.get(stockid) * this.db.getCurrentStockPrice(stockid);
-            unrealizedProfit += this.db.getBalance(userid, stockid);
+    HashMap<Integer, Double> stockUnrealizedProfit(int userid) throws SQLException {
+        return this.db.getUnrealizedProfit(userid);
+    }
+
+    public double totalUnrealizedProfit(int userid) throws SQLException{
+        HashMap<Integer, Double> stockProfits = stockUnrealizedProfit(userid);
+        double totalProfit = 0.0;
+        for (double profit : stockProfits.values()){
+            System.out.println("profit" + profit);
+            totalProfit += profit;
         }
-        return unrealizedProfit;
 
+        System.out.println("total profit" + totalProfit);
+        return totalProfit;
     }
 }

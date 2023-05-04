@@ -32,7 +32,7 @@ public class ProfilePage extends JFrame{
         add(currentCashLabel);
         currentCashLabel.setText("Current Balance: " + String.valueOf(this.c.getbaseCash()));
         add(unrealizedProfitLable);
-        unrealizedProfitLable.setText(("Unrealized Profit:" + cs.getUnrealizedProfit()));
+        unrealizedProfitLable.setText(("Unrealized Profit:" + cs.totalUnrealizedProfit(c.getId())));
         add(backButton);
         add(editButton);
 
