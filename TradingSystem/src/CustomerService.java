@@ -23,6 +23,10 @@ public class CustomerService implements CustomerServiceInterface{
         double totalCost = this.db.getCurrentStockPrice(stockid) * quantity;
         int userid = this.c.getId();
         double currentCash = this.db.getBaseCash(userid);
+        if (this.db.getUserStatus(userid) == 0){
+            System.out.println("Your account have been locked");
+            return false;
+        }
         if (totalCost > currentCash){
             System.out.println("You don't have enough money");
             return false;

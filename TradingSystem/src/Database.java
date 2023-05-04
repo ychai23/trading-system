@@ -467,8 +467,33 @@ public class Database {
         }
     }
 
-   // get owned stock data
-   public List<Stock> getOwnedStocks(int userid) throws SQLException {
+    // get basCash
+    public int getUserStatus(int customerid) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT isactive FROM Users WHERE userid = ?");
+            stmt.setInt(1, customerid);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                int isactive = rs.getInt("isactive");
+                return isactive;
+            } else{
+                return -1;
+            }
+        } finally {
+            if (rs != null) { rs.close(); }
+            if (stmt != null) { stmt.close(); }
+            if (conn != null) { conn.close(); }
+        }
+    }
+
+
+    // get owned stock data
+    public List<Stock> getOwnedStocks(int userid) throws SQLException {
         List<Stock> owned = new ArrayList<>();
         try {
             Connection conn = getConnection(); 

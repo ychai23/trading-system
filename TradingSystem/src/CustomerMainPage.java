@@ -26,7 +26,6 @@ public class CustomerMainPage extends JFrame{
         add(withdrawButton);
         add(logoutButton);
 
-
         viewProfileButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // redirect to buystockpage
