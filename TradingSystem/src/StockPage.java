@@ -10,6 +10,7 @@ public class StockPage extends JFrame {
     private JTextField priceField = new JTextField(10);
     private JButton updateButton = new JButton("Update Price");
     private JButton deactivateButton = new JButton("Deactivate");
+    JButton cancelButton = new JButton("Cancel");
 
     public StockPage(Stock stock) {
         this.stock = stock;
@@ -42,6 +43,7 @@ public class StockPage extends JFrame {
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(updateButton);
         buttonPanel.add(deactivateButton);
+        buttonPanel.add(cancelButton);
 
         // Add action listener to update button
         updateButton.addActionListener(new ActionListener() {
@@ -60,6 +62,20 @@ public class StockPage extends JFrame {
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(StockPage.this, "Invalid price format.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // redirect to ManageUsersPage
+                ManageStocksPage msp = null;
+                try {
+                    msp = new ManageStocksPage();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                msp.setVisible(true);
+                setVisible(false);
             }
         });
 

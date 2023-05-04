@@ -74,7 +74,6 @@ public class Market extends JFrame {
 
 
             // Populate the DefaultTableModel with data from the ResultSet
-            // Ask about whether we can use this instead of ID !!!
             for (Stock stock : stockList){
                 if (!stock.isActive()){
                     continue;

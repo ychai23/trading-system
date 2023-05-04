@@ -74,8 +74,8 @@ public class ManageStocksPage extends JFrame {
         });
         viewStockButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int stockID = Integer.parseInt(idField.getText());
-                Stock stock = ms.getStockFromID(stockID);
+                String symbol = idField.getText();
+                Stock stock = ms.getStockFromID(ms.getStockId(symbol));
                 if(stock == null){
                     JOptionPane.showMessageDialog(null, "Stock not found");
                     return;
@@ -89,7 +89,7 @@ public class ManageStocksPage extends JFrame {
         // Create a panel to hold the buttons
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new GridLayout(1, 3));
-        inputPanel.add(new JLabel("Enter Stock ID:"));
+        inputPanel.add(new JLabel("Enter Stock Symbol:"));
         inputPanel.add(idField);
         inputPanel.add(viewStockButton);
         inputPanel.add(addStockButton);
