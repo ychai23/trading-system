@@ -25,7 +25,7 @@ public class Database {
         if (instance == null) {
             try {
                 // change this password to your own
-                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
+                instance = new Database("jdbc:mysql://localhost:3306/tradingSystem", "root", "18072536");
             } catch (SQLException e) {
                 System.err.println("Error: " + e.getMessage());
             } catch (ClassNotFoundException e) {
@@ -37,7 +37,7 @@ public class Database {
 
 
     public Connection getConnection() throws SQLException {
-        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/tradingSystem", "root", "18072536");
         return conn;
     }
 
@@ -741,7 +741,7 @@ public class Database {
                 stmt = conn.prepareStatement("INSERT INTO userStock (userid, stockid, balance, quantity) VALUES (?, ?, ?, ?)");
                 stmt.setInt(1, userid);
                 stmt.setInt(2, stockID);
-                stmt.setDouble(3, spent);
+                stmt.setDouble(3, - spent);
                 stmt.setDouble(4, buyQuantity);
                 stmt.executeUpdate();
             }
@@ -752,6 +752,16 @@ public class Database {
             stmt.setDouble(1, spent);
             stmt.setInt(2, userid);
             stmt.executeUpdate();
+
+            //update userStocks
+            String sql2 = "INSERT INTO userStocks(userid, stockid, quantity, purchase_price) VALUES (?, ?, ?, ?)";
+            stmt = conn.prepareStatement(sql2);
+            stmt.setInt(1, userid);
+            stmt.setInt(2, stockID);
+            stmt.setInt(3, buyQuantity);
+            stmt.setDouble(4, stockPrice);
+            stmt.executeUpdate();
+
             return spent;
 
         } catch (SQLException e) {
@@ -785,12 +795,40 @@ public class Database {
             stmt.setInt(3, stockID);
             stmt.executeUpdate();
 
+
+
+            //update userStocks
+            ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM userStocks WHERE userid =" + userid + " AND stockid = " + stockID + " ORDER BY purchase_order ASC");
+            double totalCostBasis = 0.0;
+            int sharesSold = 0;
+
+            while (rs.next() && sharesSold < sellQuantity) {
+                int purchaseOrder = rs.getInt("purchase_order");
+                int purchasedShares = rs.getInt("quantity");
+                double purchasePrice = rs.getDouble("purchase_price");
+                int sellingQuantity = Math.min(purchasedShares,  sellQuantity - sharesSold);
+                totalCostBasis +=  sellingQuantity * purchasePrice;
+                sharesSold += sellingQuantity;
+
+                if (purchasedShares ==  sellingQuantity) {
+                    conn.createStatement().executeUpdate("DELETE FROM userStocks WHERE purchase_order =" + purchaseOrder);
+
+                } else {
+                    conn.createStatement().executeUpdate("UPDATE userStocks SET quantity = " + (purchasedShares - sellingQuantity) + " WHERE purchase_order = " + purchaseOrder);
+                }
+            }
+
+//            double proceeds = sharesSold * sellPrice;
+//            double profit = proceeds - totalCostBasis;
+
+
             // update baseCash
             sql = "UPDATE users SET baseCash=baseCash + ? WHERE userid = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setDouble(1, earning);
             stmt.setInt(2, userid);
             stmt.executeUpdate();
+
             return earning;
         } catch (SQLException e) {
             e.printStackTrace();
