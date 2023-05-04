@@ -1,5 +1,4 @@
 public class Customer extends User {
-
     private double baseCash;
     private double deposit;
     private double realizedProfit;
@@ -15,27 +14,19 @@ public class Customer extends User {
     public double getRealizedProfit(){
         return this.baseCash - this.deposit;
     }
-    public double getBaseCash() {return this.baseCash; }
-
-    public boolean buyStock(){
-        if (this.baseCash <= 200){
-            System.out.println("you cant buy stock due to your low credit score.");
-        }
-        return true;
-    }
-
-    public boolean sellStock(){
-        return true;
-    }
+    public void updatebaseCash(double money) { this.baseCash += money; }
+    public double getbaseCash() { return this.baseCash; }
 
     public double desposit(double amount){
         this.baseCash += amount;
+        this.deposit += amount;
         System.out.println("You desposited " + amount + " into your account.");
         return this.baseCash;
     }
 
     public double withdraw(double amount){
         this.baseCash -= amount;
+        this.deposit -= amount;
         System.out.println("You withdrew " + amount + " from your account.");
         return this.baseCash;
     }
