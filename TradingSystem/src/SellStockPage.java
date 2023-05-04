@@ -45,6 +45,20 @@ public class SellStockPage extends JFrame{
         confirmSellButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // complete the sell for that stock
+                try {
+                    if (!cs.sellStock(Integer.parseInt(stockIDTextField.getText()), Integer.parseInt(stockQuantityTextField.getText()))){
+                        JOptionPane.showMessageDialog(null,
+                                "Sell Transaction Failed",
+                                "Sell Failed",
+                                JOptionPane.WARNING_MESSAGE);
+                    } else{
+                        JOptionPane.showMessageDialog(null,
+                                "Stock Sold Success",
+                                "Sell Success", JOptionPane.PLAIN_MESSAGE);
+                    }
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 

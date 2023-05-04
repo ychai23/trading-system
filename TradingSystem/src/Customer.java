@@ -15,6 +15,7 @@ public class Customer extends User {
     public double getRealizedProfit(){
         return this.baseCash - this.deposit;
     }
+    public double getBaseCash() {return this.baseCash; }
 
     public boolean buyStock(){
         if (this.baseCash <= 200){

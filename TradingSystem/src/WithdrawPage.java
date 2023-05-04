@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 public class WithdrawPage extends JFrame{
     private CustomerService cs;
+    private JLabel currentCashLabel = new JLabel();
     private JLabel amountLabel = new JLabel("Enter amount to withdraw");
     private JTextField amountTextField = new JTextField();
     private JButton withdrawButton = new JButton("Confirm Withdraw");
@@ -15,6 +16,8 @@ public class WithdrawPage extends JFrame{
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(5, 2));
+        add(currentCashLabel);
+        currentCashLabel.setText("Current Balance: " + String.valueOf(this.cs.getBalance()));
         add(amountLabel);
         add(amountTextField);
         add(withdrawButton);
@@ -24,6 +27,7 @@ public class WithdrawPage extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 // confirm withdraw and withdraws
                 cs.withdraw(Double.parseDouble(amountTextField.getText()));
+                currentCashLabel.setText("Current Balance: " + cs.getBalance());
             }
         });
 

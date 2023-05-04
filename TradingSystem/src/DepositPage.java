@@ -4,6 +4,7 @@ import java.awt.event.*;
 
 public class DepositPage extends JFrame {
     private CustomerService cs;
+    private JLabel currentCashLabel = new JLabel();
     private JLabel amountLabel = new JLabel("Enter amount to deposit");
     private JTextField amountTextField = new JTextField();
     private JButton depositButton = new JButton("Confirm Deposit");
@@ -12,9 +13,11 @@ public class DepositPage extends JFrame {
     public DepositPage(CustomerService cs) {
         this.cs = cs;
         setTitle("Deposit Page");
-        setSize(400, 300);
+        setSize(400,300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(5, 2));
+        add(currentCashLabel);
+        currentCashLabel.setText("Current Balance: " + String.valueOf(this.cs.getBalance()));
         add(amountLabel);
         add(amountTextField);
         add(depositButton);
@@ -24,6 +27,7 @@ public class DepositPage extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // confirm deposit and deposit
                 cs.deposit(Double.parseDouble(amountTextField.getText()));
+                currentCashLabel.setText("Current Balance: " + cs.getBalance());
             }
         });
 

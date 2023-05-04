@@ -30,11 +30,11 @@ CREATE TABLE Stocks (
 
 
 CREATE TABLE userStock(
-userid INT not null,
-stockid INT not null,
-buyPrice DECIMAL(10,2),
-FOREIGN KEY (userid) REFERENCES Users(userid) ON DELETE NO ACTION,
-FOREIGN KEY (stockid) REFERENCES Stocks(stockid) ON DELETE NO ACTION,
-quantity INT,
-PRIMARY KEY(userid,stockid)
+  userid INT not null,
+  stockid INT not null,
+  balance DECIMAL(10,2),
+  FOREIGN KEY (userid) REFERENCES Users(userid) ON DELETE NO ACTION,
+  FOREIGN KEY (stockid) REFERENCES Stocks(stockid) ON DELETE NO ACTION,
+  quantity INT,
+  PRIMARY KEY(userid,stockid)
 );

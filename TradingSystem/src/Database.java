@@ -25,7 +25,7 @@ public class Database {
         if (instance == null) {
             try {
                 // change this password to your own
-                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
+                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
             } catch (SQLException e) {
                 System.err.println("Error: " + e.getMessage());
             } catch (ClassNotFoundException e) {
@@ -37,7 +37,7 @@ public class Database {
 
 
     public Connection getConnection() throws SQLException {
-        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
         return conn;
     }
 
@@ -443,6 +443,30 @@ public class Database {
         }
     }
 
+    // get basCash
+    public double getBaseCash(int customerid) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT baseCash FROM Users WHERE userid = ?");
+            stmt.setInt(1, customerid);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                double baseCash = rs.getDouble("baseCash");
+                return baseCash;
+            } else{
+                return -1;
+            }
+        } finally {
+            if (rs != null) { rs.close(); }
+            if (stmt != null) { stmt.close(); }
+            if (conn != null) { conn.close(); }
+        }
+    }
+
    // get owned stock data
    public List<Stock> getOwnedStocks(int userid) throws SQLException {
         List<Stock> owned = new ArrayList<>();
@@ -463,6 +487,32 @@ public class Database {
             e.printStackTrace();
         }
         return owned;
+    }
+
+    // update deposit
+    public boolean setCustomerDeposit(int userid, double newDeposit) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "UPDATE Users SET deposit = ? WHERE userid = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setDouble(1, newDeposit);
+            stmt.setInt(2, userid);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
     }
 
     // update basemoney
@@ -492,57 +542,8 @@ public class Database {
             }
         }
     }
-    
-    // buy stock
-    public boolean buyStock(Stock stock) throws SQLException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
 
-        try {
-            conn = getConnection();
-            stmt = conn.prepareStatement("INSERT INTO userStock (name, symbol, price) VALUES (?,?, ?)");
-            stmt.setString(1, stock.getName());
-            stmt.setString(2, stock.getSymbol());
-            stmt.setDouble(3, stock.getPrice());
-            stmt.executeUpdate();
-            stock.setID(getStockId(stock.getSymbol()));
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            if (stmt != null) {
-                stmt.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
-        }
-    }
 
-    public double getBuyPrice(int userid, int stockid) throws SQLException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        try {
-            conn = getConnection();
-            stmt = conn.prepareStatement("SELECT buyPrice FROM userStock WHERE (stockid = ? AND userid = ?) ");
-            stmt.setInt(1, stockid);
-            stmt.setInt(2, userid);
-            rs = stmt.executeQuery();
-            if (rs.next()) {
-                double stockBuyPrice = rs.getInt("buyPrice");
-                return stockBuyPrice;
-            } else {
-                return -1;
-            }
-        } finally {
-            if (rs != null) { rs.close(); }
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
-        }
-    }
     public HashMap<Integer, Integer> getUserStockQuantity(int userid) throws  SQLException{
         HashMap<Integer,Integer> stockIDQuantity = new HashMap<Integer, Integer>();
         try {
@@ -563,6 +564,170 @@ public class Database {
         return stockIDQuantity;
     }
 
+    // get stock price by id
+    public double getCurrentStockPrice(int stockid) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT price FROM Stocks WHERE stockid = ?");
+            stmt.setInt(1, stockid);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                double stockPrice = rs.getInt("price");
+                return stockPrice;
+            } else {
+                return -1;
+            }
+        } finally {
+            if (rs != null) { rs.close(); }
+            if (stmt != null) { stmt.close(); }
+            if (conn != null) { conn.close(); }
+        }
+    }
+
+
+    // get balance for a single stock
+    public double getBalance(int userid, int stockid) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT balance FROM userStock WHERE stockid = ? and userid = ?");
+            stmt.setInt(1, stockid);
+            stmt.setInt(2, userid);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                double balance = rs.getInt("balance");
+                return balance;
+            } else {
+                return -1;
+            }
+        } finally {
+            if (rs != null) { rs.close(); }
+            if (stmt != null) { stmt.close(); }
+            if (conn != null) { conn.close(); }
+        }
+    }
+
+
+    //get Stock from Stock ID and userID
+    public boolean checkStock(int userid, int stockid) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT * FROM userStock WHERE stockid = ? AND userid = ?");
+            stmt.setInt(1, stockid);
+            stmt.setInt(2, userid);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } finally {
+            if (rs != null) { rs.close(); }
+            if (stmt != null) { stmt.close(); }
+            if (conn != null) { conn.close(); }
+        }
+    }
+
+    // buy stock
+    public boolean buyStock(int userid, int stockID, int buyQuantity) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        double stockPrice = getCurrentStockPrice(stockID);
+        double spent = stockPrice * buyQuantity;
+
+        try {
+            conn = getConnection();
+            if (checkStock(userid, stockID)){
+                // if stock in userStock, then just change the balance and quantity
+                String sql = "UPDATE userStock SET quantity = quantity + ?, balance = balance - ? WHERE stockid = ?";
+                stmt = conn.prepareStatement(sql);
+                stmt.setDouble(1, buyQuantity);
+                stmt.setDouble(2, spent);
+                stmt.setInt(3, stockID);
+                stmt.executeUpdate();
+            } else{
+                // add stock to userStock
+                conn = getConnection();
+                stmt = conn.prepareStatement("INSERT INTO userStock (userid, stockid, balance, quantity) VALUES (?, ?, ?, ?)");
+                stmt.setInt(1, userid);
+                stmt.setInt(2, stockID);
+                stmt.setDouble(3, spent);
+                stmt.setDouble(4, buyQuantity);
+                stmt.executeUpdate();
+            }
+
+            // update baseCash
+            String sql = "UPDATE users SET baseCash=baseCash - ? WHERE userid = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setDouble(1, spent);
+            stmt.setInt(2, userid);
+            stmt.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
     // sell stock
+    public boolean sellStock(int userid, int stockID, int sellQuantity) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        double sellPrice = getCurrentStockPrice(stockID);
+        double earning = sellPrice * sellQuantity;
+
+        try {
+            // change quantity and balance
+            conn = getConnection();
+            String sql = "UPDATE userStock SET quantity=quantity - ?, balance=balance + ? WHERE stockid = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setDouble(1, sellQuantity);
+            stmt.setDouble(2, earning);
+            stmt.setInt(3, stockID);
+            stmt.executeUpdate();
+
+            // update baseCash
+            sql = "UPDATE users SET baseCash=baseCash + ? WHERE userid = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setDouble(1, earning);
+            stmt.setInt(2, userid);
+            stmt.executeUpdate();
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
    
 }

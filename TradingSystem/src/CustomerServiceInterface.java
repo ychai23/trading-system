@@ -1,8 +1,9 @@
+import java.sql.SQLException;
 import java.util.List;
 
 public interface CustomerServiceInterface {
-    public boolean buyStock();
-    public boolean sellStock();
+    public boolean buyStock(int stockid, int quantity) throws SQLException;
+    public boolean sellStock(int stockid, int quantity) throws SQLException;
     public boolean withdraw(double amount);
     public boolean deposit(double amount);
     // get market data

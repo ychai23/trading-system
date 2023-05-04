@@ -4,6 +4,8 @@ import java.awt.event.*;
 
 public class CustomerMainPage extends JFrame{
     private CustomerService cs;
+    private JButton viewProfileButton = new JButton("View Profile");
+    private JLabel currentCashLabel = new JLabel();
     private JButton buyStockButton = new JButton("Buy Stock");
     private JButton sellStockButton = new JButton("Sell Stock");
     private JButton depositButton = new JButton("Deposit");
@@ -17,6 +19,7 @@ public class CustomerMainPage extends JFrame{
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(2, 3));
+        add(viewProfileButton);
         add(buyStockButton);
         add(sellStockButton);
         add(depositButton);
@@ -24,10 +27,18 @@ public class CustomerMainPage extends JFrame{
         add(logoutButton);
 
 
+        viewProfileButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // redirect to buystockpage
+                ProfilePage pg = new ProfilePage(cs);
+                pg.setVisible(true);
+            }
+        });
+
         buyStockButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // redirect to buystockpage
-                BuyStockPage bsp = new BuyStockPage();
+                BuyStockPage bsp = new BuyStockPage(cs);
                 bsp.setVisible(true);
             }
         });
@@ -62,7 +73,7 @@ public class CustomerMainPage extends JFrame{
                 setVisible(false);
                 JOptionPane.showMessageDialog(null,
                         "You have logged Out",
-                        "LOGGED Out",
+                        "Logged Out",
                         JOptionPane.WARNING_MESSAGE);
                 MainPage mp = MainPage.getMainPage();
                 mp.setVisible(true);

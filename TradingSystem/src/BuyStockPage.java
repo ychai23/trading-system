@@ -4,6 +4,7 @@ import java.awt.event.*;
 import java.sql.SQLException;
 
 public class BuyStockPage extends JFrame{
+    private CustomerService cs;
     private JButton viewStockButton = new JButton(" View ALL Stock in Market");
     private JLabel stockIDLabel = new JLabel("Enter stockID to buy");
     private JTextField stockIDTextField = new JTextField();
@@ -12,7 +13,8 @@ public class BuyStockPage extends JFrame{
     private JButton confirmBuyButton = new JButton("Confirm");
     private JButton cancelButton = new JButton("Cancel");
 
-    public BuyStockPage() {
+    public BuyStockPage(CustomerService cs) {
+        this.cs = cs;
         setTitle("Stock Purchase Page");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,6 +43,20 @@ public class BuyStockPage extends JFrame{
         confirmBuyButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // complete the purchase for that stock
+                try {
+                    if (!cs.buyStock(Integer.parseInt(stockIDTextField.getText()), Integer.parseInt(stockQuantityTextField.getText()))){
+                        JOptionPane.showMessageDialog(null,
+                                "Purchase Transaction Failed",
+                                "Buy Failed",
+                                JOptionPane.WARNING_MESSAGE);
+                    } else{
+                        JOptionPane.showMessageDialog(null,
+                                "Purchase Transaction Success",
+                                "Buy Success", JOptionPane.PLAIN_MESSAGE);
+                    }
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 
