@@ -12,9 +12,20 @@ public class MainPage extends JFrame{
         setTitle("Trading System");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(2, 1));
-        add(loginButton);
-        add(registerButton);
+        setLayout(new GridLayout(3, 1));
+
+        JLabel welcomeLabel = new JLabel("Welcome to Trading System!", SwingConstants.CENTER);
+        add(welcomeLabel);
+        // add image
+        ImageIcon icon = new ImageIcon(getClass().getResource("tradingSystem.jpeg"));
+        JLabel imageLabel = new JLabel(icon, SwingConstants.CENTER);
+        add(imageLabel);
+
+        // add buttons
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(loginButton);
+        buttonPanel.add(registerButton);
+        add(buttonPanel);
         JFrame loginFrame = (JFrame) SwingUtilities.getWindowAncestor(loginButton); // Get the current frame
         JFrame regFrame = (JFrame) SwingUtilities.getWindowAncestor(registerButton); // Get the current frame
 

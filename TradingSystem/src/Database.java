@@ -25,7 +25,7 @@ public class Database {
         if (instance == null) {
             try {
                 // change this password to your own
-                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
+                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
             } catch (SQLException e) {
                 System.err.println("Error: " + e.getMessage());
             } catch (ClassNotFoundException e) {
@@ -37,7 +37,7 @@ public class Database {
 
 
     public Connection getConnection() throws SQLException {
-        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
         return conn;
     }
 
@@ -548,15 +548,14 @@ public class Database {
     public List<Stock> getOwnedStocks(int userid) throws SQLException {
         List<Stock> owned = new ArrayList<>();
         try {
-            Connection conn = getConnection(); 
-            String sql = "SELECT * FROM userStock WHERE userid = ?";
+            Connection conn = getConnection();
+            String sql = "SELECT s.* FROM userStock us JOIN Stocks s ON us.stockid = s.stockid WHERE us.userid = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, userid);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                Stock stock = new Stock(rs.getString("name"), rs.getString("symbol"),rs.getDouble("price"));
+                Stock stock = new Stock(rs.getString("name"), rs.getString("symbol"), rs.getDouble("price"));
                 stock.setID(rs.getInt("stockid"));
-                stock.setSymbol(rs.getString("symbol"));
                 stock.setActive(rs.getBoolean("isactive"));
                 owned.add(stock);
             }
@@ -565,6 +564,7 @@ public class Database {
         }
         return owned;
     }
+
 
     // update deposit
     public boolean setCustomerDeposit(int userid, double newDeposit) throws SQLException {

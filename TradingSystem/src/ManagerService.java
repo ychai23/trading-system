@@ -82,7 +82,7 @@ public class ManagerService implements ManagerServiceInterface{
     // get Stock Id from Symbol
     public int getStockId(String symbol){
         try {
-            return this.db.getUserID(symbol);
+            return this.db.getStockId(symbol);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
