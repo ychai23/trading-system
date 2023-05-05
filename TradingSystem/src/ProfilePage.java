@@ -10,6 +10,7 @@ public class ProfilePage extends JFrame{
     private JLabel currentCashLabel = new JLabel();
 
     private JLabel unrealizedProfitLable = new JLabel();
+    private JLabel realizedProfitLable = new JLabel();
     private JLabel pwLabel = new JLabel();
     private JLabel emailLabel = new JLabel();
     private JButton backButton = new JButton("Back");
@@ -33,6 +34,8 @@ public class ProfilePage extends JFrame{
         currentCashLabel.setText("Current Balance: " + String.valueOf(this.c.getbaseCash()));
         add(unrealizedProfitLable);
         unrealizedProfitLable.setText(("Unrealized Profit:" + cs.totalUnrealizedProfit(c.getId())));
+        add(realizedProfitLable);
+        realizedProfitLable.setText(("Realized Profit:" + this.c.getRealizedProfit()));
         add(backButton);
         add(editButton);
 
