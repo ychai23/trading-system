@@ -1,12 +1,16 @@
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 public class CustomerService implements CustomerServiceInterface{
     Database db;
     Customer c;
+
+    private int userid;
     public CustomerService(Database db, Customer c){
         this.db = db;
         this.c = c;
+        this.userid = c.getId();
     }
     public Customer getCustomer(){
         return this.c;
@@ -74,7 +78,7 @@ public class CustomerService implements CustomerServiceInterface{
         }
         double spending = this.db.buyStock(userid, stockid, quantity);
         if (spending != 1){
-            this.c.updatebaseCash(spending);
+            this.c.updatebaseCash(-spending);
         }
         System.out.println("User " + userid + " successfully purchased " + quantity + " shares of stock " + stockid);
         return true;
@@ -110,5 +114,35 @@ public class CustomerService implements CustomerServiceInterface{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+//    public double getUnrealizedProfit() throws SQLException {
+//        List<Stock> stockList = getOwnedStocks(this.userid);
+//        HashMap<Integer, Integer> stockQuantity = this.db.getUserStockQuantity(this.userid);
+//
+//        double unrealizedProfit = 0.0;
+//        for (Stock stock : stockList){
+//            int stockid = stock.getID();
+//            unrealizedProfit += stockQuantity.get(stockid) * this.db.getCurrentStockPrice(stockid);
+//            unrealizedProfit += this.db.getBalance(userid, stockid);
+//        }
+//        return unrealizedProfit;
+//
+//    }
+
+    HashMap<Integer, Double> stockUnrealizedProfit(int userid) throws SQLException {
+        return this.db.getUnrealizedProfit(userid);
+    }
+
+    public double totalUnrealizedProfit(int userid) throws SQLException{
+        HashMap<Integer, Double> stockProfits = stockUnrealizedProfit(userid);
+        double totalProfit = 0.0;
+        for (double profit : stockProfits.values()){
+            System.out.println("profit" + profit);
+            totalProfit += profit;
+        }
+
+        System.out.println("total profit" + totalProfit);
+        return totalProfit;
     }
 }

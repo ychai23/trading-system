@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.SQLException;
 
 public class CustomerMainPage extends JFrame{
     private CustomerService cs;
@@ -29,7 +30,12 @@ public class CustomerMainPage extends JFrame{
         viewProfileButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // redirect to buystockpage
-                ProfilePage pg = new ProfilePage(cs);
+                ProfilePage pg = null;
+                try {
+                    pg = new ProfilePage(cs);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
                 pg.setVisible(true);
             }
         });

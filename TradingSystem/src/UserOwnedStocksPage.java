@@ -38,9 +38,8 @@ public class UserOwnedStocksPage extends JFrame {
             model.addColumn("ID");
             model.addColumn("Name");
             model.addColumn("Price");
-            model.addColumn("BuyPrice");
             model.addColumn("Quantity");
-            model.addColumn("Profit");
+            model.addColumn("Balance");
 
 
 
@@ -55,9 +54,8 @@ public class UserOwnedStocksPage extends JFrame {
                 rowData[0] = stock.getID();
                 rowData[1] = stock.getName();
                 rowData[2] = stock.getPrice();
-                rowData[3] = db.getBalance(this.userid , stock.getID());
-                rowData[4] = stockQuantity.get(stock.getID());
-                rowData[5] = stockQuantity.get(stock.getID()) * (stock.getPrice() -  db.getBalance(this.userid , stock.getID()));
+                rowData[3] = stockQuantity.get(stock.getID());
+                rowData[4] = db.getBalance(this.userid , stock.getID());
 
                 model.addRow(rowData);
             }
