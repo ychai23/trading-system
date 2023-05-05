@@ -8,11 +8,14 @@ public class ProfilePage extends JFrame{
     private JLabel firstnameLabel = new JLabel();
     private JLabel lastnameLabel = new JLabel();
     private JLabel currentCashLabel = new JLabel();
+
+    private JLabel unrealizedProfitLable = new JLabel();
+    private JLabel realizedProfitLable = new JLabel();
     private JLabel pwLabel = new JLabel();
     private JLabel emailLabel = new JLabel();
     private JButton backButton = new JButton("Back");
     private JButton editButton = new JButton("Edit");
-    public ProfilePage(CustomerService cs) {
+    public ProfilePage(CustomerService cs) throws SQLException {
         this.c = cs.getCustomer();
 
         setTitle("Profile Page");
@@ -29,6 +32,10 @@ public class ProfilePage extends JFrame{
         pwLabel.setText("Password: " + String.valueOf(this.c.getPassword()));
         add(currentCashLabel);
         currentCashLabel.setText("Current Balance: " + String.valueOf(this.c.getbaseCash()));
+        add(unrealizedProfitLable);
+        unrealizedProfitLable.setText(("Unrealized Profit:" + cs.totalUnrealizedProfit(c.getId())));
+        add(realizedProfitLable);
+        realizedProfitLable.setText(("Realized Profit:" + this.c.getRealizedProfit()));
         add(backButton);
         add(editButton);
 

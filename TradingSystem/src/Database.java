@@ -25,7 +25,7 @@ public class Database {
         if (instance == null) {
             try {
                 // change this password to your own
-                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
+                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
             } catch (SQLException e) {
                 System.err.println("Error: " + e.getMessage());
             } catch (ClassNotFoundException e) {
@@ -33,11 +33,11 @@ public class Database {
             }
         }
         return instance;
-      }
+    }
 
 
     public Connection getConnection() throws SQLException {
-        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
         return conn;
     }
 
@@ -64,16 +64,19 @@ public class Database {
             stmt.setDouble(7, 0.0);
             stmt.executeUpdate();
             return true;
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        }
-        finally {
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
+
     // get user.id from email
     public int getUserID(String email) throws SQLException {
         Connection conn = null;
@@ -93,11 +96,18 @@ public class Database {
                 return -1;
             }
         } finally {
-            if (rs != null) { rs.close(); }
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
+
     // make User object from database based on input userid
     public User getUserFromID(int userid) throws SQLException {
         Connection conn = null;
@@ -122,13 +132,20 @@ public class Database {
                 return null;
             }
         } finally {
-            if (rs != null) { rs.close(); }
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
+
     // set user isactive boolean to true and take user email
-    public void setUserActive(String email,boolean active) throws SQLException {
+    public void setUserActive(String email, boolean active) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
 
@@ -139,8 +156,12 @@ public class Database {
             stmt.setString(2, email);
             stmt.executeUpdate();
         } finally {
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
 
@@ -164,9 +185,15 @@ public class Database {
                 return false;
             }
         } finally {
-            if (rs != null) { rs.close(); }
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
 
@@ -175,13 +202,13 @@ public class Database {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        
+
         try {
             conn = getConnection();
             stmt = conn.prepareStatement("SELECT COUNT(*) FROM Users WHERE role = ?");
             stmt.setString(1, "Manager");
             rs = stmt.executeQuery();
-            
+
             if (rs.next()) {
                 int count = rs.getInt(1);
                 return count > 0;
@@ -189,9 +216,15 @@ public class Database {
                 return false;
             }
         } finally {
-            if (rs != null) { rs.close(); }
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
 
@@ -200,13 +233,13 @@ public class Database {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        
+
         try {
             conn = getConnection();
             stmt = conn.prepareStatement("SELECT role FROM Users WHERE email = ?");
             stmt.setString(1, email);
             rs = stmt.executeQuery();
-            
+
             if (rs.next()) {
                 String role = rs.getString("role");
                 return role;
@@ -214,12 +247,18 @@ public class Database {
                 return null;
             }
         } finally {
-            if (rs != null) { rs.close(); }
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
-    
+
 
     public void close() throws SQLException {
         conn.close();
@@ -286,7 +325,7 @@ public class Database {
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Stocks");
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                Stock stock = new Stock(rs.getString("name"), rs.getString("symbol"),rs.getDouble("price"));
+                Stock stock = new Stock(rs.getString("name"), rs.getString("symbol"), rs.getDouble("price"));
                 stock.setID(rs.getInt("stockid"));
                 stock.setSymbol(rs.getString("symbol"));
                 stock.setActive(rs.getBoolean("isactive"));
@@ -303,13 +342,12 @@ public class Database {
         // create a list to hold all the user data
         List<User> userData = new ArrayList<>();
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Users");
-            ResultSet rs = stmt.executeQuery()) {
+             ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                User user = new User(rs.getString("fname"), rs.getString("lname"),rs.getString("email"),rs.getString("password"),rs.getString("role"));
-                if(rs.getBoolean("isactive") == true){
+                User user = new User(rs.getString("fname"), rs.getString("lname"), rs.getString("email"), rs.getString("password"), rs.getString("role"));
+                if (rs.getBoolean("isactive") == true) {
                     user.setActive();
-                }
-                else{
+                } else {
                     user.setInactive();
                 }
                 userData.add(user);
@@ -328,20 +366,21 @@ public class Database {
             e.printStackTrace();
         }
     }
+
     //get Stock from Stock ID
     public Stock getStockFromID(int stockid) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        
+
         try {
             conn = getConnection();
             stmt = conn.prepareStatement("SELECT * FROM Stocks WHERE stockid = ?");
             stmt.setInt(1, stockid);
             rs = stmt.executeQuery();
-            
+
             if (rs.next()) {
-                Stock stock = new Stock(rs.getString("name"), rs.getString("symbol"),rs.getDouble("price"));
+                Stock stock = new Stock(rs.getString("name"), rs.getString("symbol"), rs.getDouble("price"));
                 stock.setID(rs.getInt("stockid"));
                 stock.setSymbol(rs.getString("symbol"));
                 stock.setActive(rs.getBoolean("isactive"));
@@ -350,9 +389,15 @@ public class Database {
                 return null;
             }
         } finally {
-            if (rs != null) { rs.close(); }
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
 
@@ -361,13 +406,13 @@ public class Database {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        
+
         try {
             conn = getConnection();
             stmt = conn.prepareStatement("SELECT stockid FROM Stocks WHERE symbol = ?");
             stmt.setString(1, symbol);
             rs = stmt.executeQuery();
-            
+
             if (rs.next()) {
                 int stockid = rs.getInt("stockid");
                 return stockid;
@@ -375,37 +420,43 @@ public class Database {
                 return -1;
             }
         } finally {
-            if (rs != null) { rs.close(); }
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
 
     // block stock
     public boolean blockStock(String symbol) throws SQLException {
-       Connection conn = null;
-       PreparedStatement stmt = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
 
-       try {
-           conn = getConnection();
-           String sql = "UPDATE stocks SET isactive = ? WHERE symbol = ?";
-           stmt = conn.prepareStatement(sql);
-           stmt.setBoolean(1, false);
-           stmt.setString(2, symbol);
-           stmt.executeUpdate();
-           return true;
-       } catch (SQLException e) {
-           e.printStackTrace();
-           return false;
-       } finally {
-           if (stmt != null) {
-               stmt.close();
-           }
-           if (conn != null) {
-               conn.close();
-           }
-       }
-   }
+        try {
+            conn = getConnection();
+            String sql = "UPDATE stocks SET isactive = ? WHERE symbol = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setBoolean(1, false);
+            stmt.setString(2, symbol);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
 
 
     // Customer Methods
@@ -461,7 +512,7 @@ public class Database {
             }
         }
     }
-    
+
     // getting the user role with an input of email
     public Customer getCustomer(String email) throws SQLException {
         Connection conn = null;
@@ -483,15 +534,21 @@ public class Database {
                 double baseCash = rs.getDouble("baseCash");
                 double deposit = rs.getDouble("deposit");
 
-                return new Customer(fname, lname, email, password, role,baseCash,deposit);
+                return new Customer(fname, lname, email, password, role, baseCash, deposit);
             } else {
                 System.out.println("User not found.");
                 return null;
             }
         } finally {
-            if (rs != null) { rs.close(); }
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
 
@@ -509,13 +566,19 @@ public class Database {
             if (rs.next()) {
                 double baseCash = rs.getDouble("baseCash");
                 return baseCash;
-            } else{
+            } else {
                 return -1;
             }
         } finally {
-            if (rs != null) { rs.close(); }
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
 
@@ -533,13 +596,19 @@ public class Database {
             if (rs.next()) {
                 int isactive = rs.getInt("isactive");
                 return isactive;
-            } else{
+            } else {
                 return -1;
             }
         } finally {
-            if (rs != null) { rs.close(); }
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
 
@@ -621,8 +690,8 @@ public class Database {
     }
 
 
-    public HashMap<Integer, Integer> getUserStockQuantity(int userid) throws  SQLException{
-        HashMap<Integer,Integer> stockIDQuantity = new HashMap<Integer, Integer>();
+    public HashMap<Integer, Integer> getUserStockQuantity(int userid) throws SQLException {
+        HashMap<Integer, Integer> stockIDQuantity = new HashMap<Integer, Integer>();
         try {
             Connection conn = getConnection();
 
@@ -659,9 +728,15 @@ public class Database {
                 return -1;
             }
         } finally {
-            if (rs != null) { rs.close(); }
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
 
@@ -685,9 +760,15 @@ public class Database {
                 return -1;
             }
         } finally {
-            if (rs != null) { rs.close(); }
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
 
@@ -711,9 +792,15 @@ public class Database {
                 return false;
             }
         } finally {
-            if (rs != null) { rs.close(); }
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
 
@@ -727,7 +814,7 @@ public class Database {
 
         try {
             conn = getConnection();
-            if (checkStock(userid, stockID)){
+            if (checkStock(userid, stockID)) {
                 // if stock in userStock, then just change the balance and quantity
                 String sql = "UPDATE userStock SET quantity = quantity + ?, balance = balance - ? WHERE stockid = ?";
                 stmt = conn.prepareStatement(sql);
@@ -735,13 +822,13 @@ public class Database {
                 stmt.setDouble(2, spent);
                 stmt.setInt(3, stockID);
                 stmt.executeUpdate();
-            } else{
+            } else {
                 // add stock to userStock
                 conn = getConnection();
                 stmt = conn.prepareStatement("INSERT INTO userStock (userid, stockid, balance, quantity) VALUES (?, ?, ?, ?)");
                 stmt.setInt(1, userid);
                 stmt.setInt(2, stockID);
-                stmt.setDouble(3, spent);
+                stmt.setDouble(3, -spent);
                 stmt.setDouble(4, buyQuantity);
                 stmt.executeUpdate();
             }
@@ -752,6 +839,16 @@ public class Database {
             stmt.setDouble(1, spent);
             stmt.setInt(2, userid);
             stmt.executeUpdate();
+
+            //update userStocks
+            String sql2 = "INSERT INTO userStocks(userid, stockid, quantity, purchase_price) VALUES (?, ?, ?, ?)";
+            stmt = conn.prepareStatement(sql2);
+            stmt.setInt(1, userid);
+            stmt.setInt(2, stockID);
+            stmt.setInt(3, buyQuantity);
+            stmt.setDouble(4, stockPrice);
+            stmt.executeUpdate();
+
             return spent;
 
         } catch (SQLException e) {
@@ -785,12 +882,39 @@ public class Database {
             stmt.setInt(3, stockID);
             stmt.executeUpdate();
 
+
+            //update userStocks
+            ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM userStocks WHERE userid =" + userid + " AND stockid = " + stockID + " ORDER BY purchase_order ASC");
+            double totalCostBasis = 0.0;
+            int sharesSold = 0;
+
+            while (rs.next() && sharesSold < sellQuantity) {
+                int purchaseOrder = rs.getInt("purchase_order");
+                int purchasedShares = rs.getInt("quantity");
+                double purchasePrice = rs.getDouble("purchase_price");
+                int sellingQuantity = Math.min(purchasedShares, sellQuantity - sharesSold);
+                totalCostBasis += sellingQuantity * purchasePrice;
+                sharesSold += sellingQuantity;
+
+                if (purchasedShares == sellingQuantity) {
+                    conn.createStatement().executeUpdate("DELETE FROM userStocks WHERE purchase_order =" + purchaseOrder);
+
+                } else {
+                    conn.createStatement().executeUpdate("UPDATE userStocks SET quantity = " + (purchasedShares - sellingQuantity) + " WHERE purchase_order = " + purchaseOrder);
+                }
+            }
+
+//            double proceeds = sharesSold * sellPrice;
+//            double profit = proceeds - totalCostBasis;
+
+
             // update baseCash
             sql = "UPDATE users SET baseCash=baseCash + ? WHERE userid = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setDouble(1, earning);
             stmt.setInt(2, userid);
             stmt.executeUpdate();
+
             return earning;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -805,5 +929,46 @@ public class Database {
         }
     }
 
-   
+    public HashMap<Integer, Double> getUnrealizedProfit(int userid) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        List<Stock> stockList = getOwnedStocks(userid);
+        HashMap<Integer, Double> stockUnrealizedProfit = new HashMap<>();
+
+
+        try {
+            // change quantity and balance
+            conn = getConnection();
+
+            for (Stock stock : stockList) {
+                int stockID = stock.getID();
+                ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM userStocks WHERE userid =" + userid + " AND stockid = " + stockID + " ORDER BY purchase_order ASC");
+                double currentPrice = getCurrentStockPrice(stockID);
+                double totalProfit = 0.0;
+
+                while (rs.next()) {
+                    int purchasedShares = rs.getInt("quantity");
+                    double purchasePrice = rs.getDouble("purchase_price");
+                    System.out.println("para" + purchasedShares + currentPrice + purchasePrice);
+                    totalProfit += purchasedShares * (currentPrice - purchasePrice);
+                }
+
+                stockUnrealizedProfit.put(stockID, totalProfit);
+            }
+
+            return stockUnrealizedProfit;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return null;
+    }
 }
