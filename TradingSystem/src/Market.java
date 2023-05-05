@@ -22,17 +22,7 @@ public class Market extends JFrame {
     Statement stmt = null;
 
     // Constructor
-    public static void main(String[] args) throws SQLException {
-        Market market = Market.getInstance();
-        //market.clearMarket();
-        //market.addStock("JP", "JPGM", 22.3);
-        //market.addStock("Work", "WEIN", 33.2);
-        //market.updateStockPrice("JPGM" , 2.3);
-        //market.updateStockPrice("WEIN", 0.11);
-        market.blockStockBySymbol("WEIN");
-        market.displayMarket();
 
-    }
     private Market() throws SQLException {
         // Set the title of the JFrame
         super("Stock Price Data");
@@ -52,10 +42,8 @@ public class Market extends JFrame {
     }
 
 
-    public void displayMarket() {
-        // Create a panel to hold the JTable component
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
+    public JPanel displayMarket(boolean showStatus) {
+        JPanel panel = new JPanel(new BorderLayout());
 
         try {
             List<Stock> stockList = this.db.getMarketData();
@@ -64,18 +52,18 @@ public class Market extends JFrame {
             DefaultTableModel model = new DefaultTableModel();
 
             // Get the column names from the ResultSet metadata
-
-            int numColumns = 4;
+            int numColumns = showStatus ? 5 : 4;
             model.addColumn("ID");
             model.addColumn("Name");
             model.addColumn("Symbol");
             model.addColumn("Price");
-
-
+            if (showStatus) {
+                model.addColumn("Status");
+            }
 
             // Populate the DefaultTableModel with data from the ResultSet
             for (Stock stock : stockList){
-                if (!stock.isActive()){
+                if(!showStatus && !stock.isActive()){
                     continue;
                 }
                 Object[] rowData = new Object[numColumns];
@@ -83,24 +71,23 @@ public class Market extends JFrame {
                 rowData[1] = stock.getName();
                 rowData[2] = stock.getSymbol();
                 rowData[3] = stock.getPrice();
+                if (showStatus) {
+                    rowData[4] = stock.isActive() ? "Active" : "Blocked";
+                }
                 model.addRow(rowData);
             }
 
-
             // Create the JTable with the DefaultTableModel
             table = new JTable(model);
+            panel.add(new JScrollPane(table), BorderLayout.CENTER);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        panel.add(new JScrollPane(table), BorderLayout.CENTER);
 
-        // Add the panel to the JFrame
-        add(panel);
-
-        // Set the size and visibility of the JFrame
-        setSize(500, 300);
-        setVisible(true);
+        return panel;
     }
+
 
     public void addStock(Stock newStock) throws SQLException {
 
