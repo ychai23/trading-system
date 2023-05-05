@@ -7,6 +7,7 @@ import java.util.List;
 
 public class ManageStocksPage extends JFrame {
     private ManagerService ms;
+    private Market market;
     private JTable table;
     private JButton addStockButton = new JButton("Add Stock");
     // cancel button
@@ -15,43 +16,15 @@ public class ManageStocksPage extends JFrame {
     private JButton viewStockButton = new JButton("View Stock");
 
     public ManageStocksPage() throws SQLException {
+        this.market = Market.getInstance();
         this.ms = ManagerService.getInstance();
 
         setTitle("Manage Stocks");
         setSize(600, 400);
 
         // Create a panel to hold the JTable component
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
+        JPanel panel = market.displayMarket(true);
 
-        List<Stock> stockList = this.ms.getMarketData();
-
-        // Create a DefaultTableModel object to hold the data
-        DefaultTableModel model = new DefaultTableModel();
-
-        // Get the column names from the ResultSet metadata
-        int numColumns = 5;
-        model.addColumn("ID");
-        model.addColumn("Name");
-        model.addColumn("Symbol");
-        model.addColumn("Price");
-        model.addColumn("Status");
-
-
-        for (Stock stock : stockList){
-            Object[] rowData = new Object[numColumns];
-            rowData[0] = stock.getID();
-            rowData[1] = stock.getName();
-            rowData[2] = stock.getSymbol();
-            rowData[3] = stock.getPrice();
-            rowData[4] = stock.isActive();
-
-            model.addRow(rowData);
-        }
-
-        // Create the JTable with the DefaultTableModel
-        table = new JTable(model);
-        panel.add(new JScrollPane(table), BorderLayout.CENTER);
 
         // Add the panel to the JFrame
         add(panel);

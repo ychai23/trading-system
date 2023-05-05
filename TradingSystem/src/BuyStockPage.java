@@ -29,16 +29,29 @@ public class BuyStockPage extends JFrame{
 
         viewStockButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // display stocktable
                 Market market = null;
                 try {
                     market = Market.getInstance();
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
-                market.displayMarket();
+                JPanel mainPanel = new JPanel();
+                mainPanel.setLayout(new BorderLayout());
+
+                // Create a panel to hold the market table
+                JPanel marketPanel = market.displayMarket(false);
+
+                // Add the market panel to the main panel
+                mainPanel.add(marketPanel, BorderLayout.CENTER);
+
+                JFrame frame = new JFrame("Market View");
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.getContentPane().add(marketPanel);
+                frame.pack();
+                frame.setVisible(true);
             }
         });
+
 
         confirmBuyButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
