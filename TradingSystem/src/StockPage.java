@@ -8,7 +8,11 @@ public class StockPage extends JFrame {
     private ManagerService ms;
     private Stock stock;
     private JTextField priceField = new JTextField(10);
+    private JTextField nameField = new JTextField(10);
+    private JTextField symbolField = new JTextField(10);
     private JButton updateButton = new JButton("Update Price");
+    private JButton updateNameButton = new JButton("Update Name");
+    private JButton updateSymbolButton = new JButton("Update Symbol");
     private JButton deactivateButton = new JButton("Deactivate");
     JButton cancelButton = new JButton("Cancel");
 
@@ -17,11 +21,11 @@ public class StockPage extends JFrame {
         this.ms = ManagerService.getInstance();
 
         setTitle("Stock Page");
-        setSize(400, 200);
+        setSize(600, 200);
 
         // Add stock information to the panel
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 2));
+        panel.setLayout(new GridLayout(7, 2));
 
         panel.add(new JLabel("ID:"));
         panel.add(new JLabel(Integer.toString(stock.getID())));
@@ -39,9 +43,19 @@ public class StockPage extends JFrame {
         panel.add(new JLabel("Update Price:"));
         panel.add(priceField);
 
+        // Add name update fields to the panel
+        panel.add(new JLabel("Update Name:"));
+        panel.add(nameField);
+
+        // Add symbol update fields to the panel
+        panel.add(new JLabel("Update Symbol:"));
+        panel.add(symbolField);
+
         // Add update and deactivate buttons to the panel
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(updateButton);
+        buttonPanel.add(updateNameButton);
+        buttonPanel.add(updateSymbolButton);
         buttonPanel.add(deactivateButton);
         buttonPanel.add(cancelButton);
 
@@ -64,6 +78,48 @@ public class StockPage extends JFrame {
                 }
             }
         });
+        // Add action listener to update name button
+        updateNameButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String newName = nameField.getText();
+                if (!newName.isEmpty()) {
+                    try {
+                        stock.setName(newName);
+                        // Update the name in the database or perform any other necessary operations
+                        ms.updateStockName(stock, newName);
+                        ManageStocksPage msp = new ManageStocksPage();
+                        msp.setVisible(true);
+                        setVisible(false);
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(StockPage.this, "Please enter a valid name.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+// Add action listener to update symbol button
+        updateSymbolButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String newSymbol = symbolField.getText();
+                if (!newSymbol.isEmpty()) {
+                    try {
+                        stock.setSymbol(newSymbol);
+                        // Update the symbol in the database or perform any other necessary operations
+                        ms.updateStockSymbol(stock, newSymbol);
+                        ManageStocksPage msp = new ManageStocksPage();
+                        msp.setVisible(true);
+                        setVisible(false);
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(StockPage.this, "Please enter a valid symbol.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
 
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

@@ -25,7 +25,7 @@ public class Database {
         if (instance == null) {
             try {
                 // change this password to your own
-                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
+                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
             } catch (SQLException e) {
                 System.err.println("Error: " + e.getMessage());
             } catch (ClassNotFoundException e) {
@@ -37,7 +37,7 @@ public class Database {
 
 
     public Connection getConnection() throws SQLException {
-        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
         return conn;
     }
 
@@ -302,6 +302,60 @@ public class Database {
             stmt = conn.prepareStatement(sql);
             stmt.setDouble(1, updatedStock.getPrice());
             stmt.setString(2, updatedStock.getSymbol());
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+
+
+    }
+    public boolean updateStockName(Stock updatedStock, String name) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "UPDATE stocks SET name = ? WHERE symbol = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            stmt.setString(2, updatedStock.getSymbol());
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+
+
+    }
+
+
+    public boolean updateStockSymbol(Stock updatedStock, String symbol) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "UPDATE stocks SET symbol = ? WHERE name = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, symbol);
+            stmt.setString(2, updatedStock.getName());
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
