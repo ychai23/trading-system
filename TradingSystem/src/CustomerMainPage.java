@@ -33,6 +33,12 @@ public class CustomerMainPage extends JFrame{
         add(depositButton);
         add(withdrawButton);
         add(logoutButton);
+        if(c.getRealizedProfit() >= 10000){
+            JOptionPane.showMessageDialog(null,
+                    "You have made over $10,000 in realized profit! You are now allowed to make a derivative trading account!",
+                    "Derivative Trading Account",
+                    JOptionPane.WARNING_MESSAGE);
+        }
 
         viewProfileButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
