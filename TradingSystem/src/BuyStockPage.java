@@ -58,15 +58,22 @@ public class BuyStockPage extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 // complete the purchase for that stock
                 try {
-                    if (!cs.buyStock(Integer.parseInt(stockIDTextField.getText()), Integer.parseInt(stockQuantityTextField.getText()))){
-                        JOptionPane.showMessageDialog(null,
-                                "Purchase Transaction Failed",
-                                "Buy Failed",
-                                JOptionPane.WARNING_MESSAGE);
+                    int stockid = Integer.parseInt(stockIDTextField.getText());
+                    int stockQuantity = Integer.parseInt(stockQuantityTextField.getText());
+
+                    if (stockQuantity <= 0){
+                        JOptionPane.showMessageDialog(null, "Please enter valid positive integer.", "Warning", JOptionPane.WARNING_MESSAGE);
                     } else{
-                        JOptionPane.showMessageDialog(null,
-                                "Purchase Transaction Success",
-                                "Buy Success", JOptionPane.PLAIN_MESSAGE);
+                        if (!cs.buyStock(stockid, stockQuantity)){
+                            JOptionPane.showMessageDialog(null,
+                                    "Purchase Transaction Failed",
+                                    "Buy Failed",
+                                    JOptionPane.WARNING_MESSAGE);
+                        } else{
+                            JOptionPane.showMessageDialog(null,
+                                    "Purchase Transaction Success",
+                                    "Buy Success", JOptionPane.PLAIN_MESSAGE);
+                        }
                     }
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);

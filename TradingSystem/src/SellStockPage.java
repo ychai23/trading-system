@@ -47,15 +47,23 @@ public class SellStockPage extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 // complete the sell for that stock
                 try {
-                    if (!cs.sellStock(Integer.parseInt(stockIDTextField.getText()), Integer.parseInt(stockQuantityTextField.getText()))){
-                        JOptionPane.showMessageDialog(null,
-                                "Sell Transaction Failed",
-                                "Sell Failed",
-                                JOptionPane.WARNING_MESSAGE);
+                    // check input
+                    int stockid = Integer.parseInt(stockIDTextField.getText());
+                    int stockQuantity = Integer.parseInt(stockQuantityTextField.getText());
+
+                    if (stockQuantity <= 0){
+                        JOptionPane.showMessageDialog(null, "Please enter valid positive integer.", "Warning", JOptionPane.WARNING_MESSAGE);
                     } else{
-                        JOptionPane.showMessageDialog(null,
-                                "Stock Sold Success",
-                                "Sell Success", JOptionPane.PLAIN_MESSAGE);
+                        if (!cs.sellStock(stockid, stockQuantity)){
+                            JOptionPane.showMessageDialog(null,
+                                    "Sell Transaction Failed",
+                                    "Sell Failed",
+                                    JOptionPane.WARNING_MESSAGE);
+                        } else{
+                            JOptionPane.showMessageDialog(null,
+                                    "Stock Sold Success",
+                                    "Sell Success", JOptionPane.PLAIN_MESSAGE);
+                        }
                     }
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
