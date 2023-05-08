@@ -18,6 +18,13 @@ public class ProfilePage extends JFrame{
     private JButton editButton = new JButton("Edit");
     public ProfilePage(CustomerService cs) throws SQLException {
         this.c = cs.getCustomer();
+        if(c.getRealizedProfit() >= 10000){
+            JOptionPane.showMessageDialog(null,
+                    "You have made over $10,000 in realized profit! You are now allowed to make a derivative trading account!",
+                    "Derivative Trading Account",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+
 
         setTitle("Profile Page");
         setSize(400, 300);
