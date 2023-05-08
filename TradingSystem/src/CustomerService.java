@@ -64,7 +64,7 @@ public class CustomerService implements CustomerServiceInterface{
         }
     }
 
-    public boolean buyStock(int stockid, int quantity) throws SQLException {
+    public boolean buyStock(int stockid, int quantity) throws SQLException, NoDataFoundException {
         double totalCost = this.db.getCurrentStockPrice(stockid) * quantity;
         int userid = this.c.getId();
         double currentCash = this.db.getBaseCash(userid);
@@ -76,6 +76,9 @@ public class CustomerService implements CustomerServiceInterface{
             System.out.println("You don't have enough money");
             return false;
         }
+        if (!this.db.getStockFromID(stockid).isActive()){
+            return false;
+        }
         double spending = this.db.buyStock(userid, stockid, quantity);
         if (spending != 1){
             this.c.updatebaseCash(-spending);
@@ -84,11 +87,11 @@ public class CustomerService implements CustomerServiceInterface{
         return true;
     }
 
-    public boolean sellStock(int stockid, int quantity) throws SQLException{
+    public boolean sellStock(int stockid, int quantity) throws SQLException, NoDataFoundException{
         int userid = this.c.getId();
-        int currentQuantity = this.db.getUserStockQuantity(userid).get(stockid);
+        int currentQuantity = this.db.getUserStockQuantity(userid).getOrDefault(stockid, 0);
         if (currentQuantity < quantity){
-            System.out.println("You don't have enough stocks");
+            System.out.println("You don't have enough stocks of id" + stockid);
             return false;
         }
         double earning = this.db.sellStock(userid, stockid, quantity);
@@ -100,6 +103,9 @@ public class CustomerService implements CustomerServiceInterface{
     }
 
     public boolean withdraw(double amount){
+        if (amount > getBalance()){
+            return false;
+        }
         double newBaseCash = this.c.withdraw(amount);
         try {
             return (this.db.updateBase(newBaseCash, this.c.getId()) && this.db.setCustomerDeposit(this.c.getId(), newBaseCash));

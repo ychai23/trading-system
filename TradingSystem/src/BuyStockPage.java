@@ -69,7 +69,12 @@ public class BuyStockPage extends JFrame{
                     }
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
-                }
+                } catch (NoDataFoundException er) {
+                    JOptionPane.showMessageDialog(null, "No available stock found.", "Warning", JOptionPane.WARNING_MESSAGE);
+                } catch (NumberFormatException en){
+                   JOptionPane.showMessageDialog(null, "Please enter valid integer.", "Warning", JOptionPane.WARNING_MESSAGE);
+                 }
+//            throw new RuntimeException(e);
             }
         });
 
