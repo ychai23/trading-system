@@ -95,15 +95,24 @@ public class UserRegister extends JFrame {
                 }
                 else{
                     // registering new customer
-                    Customer customer = new Customer(fname, lname, email, password, "Customer",0,0);
                     try {
-                        if(db.addUserToDB(fname, lname, email, password, "Customer")){
-                            currentFrame.dispose();
-                            UserLoginPage loginPage = new UserLoginPage();
-                            loginPage.setVisible(true);
+                        if(!db.managerExists()){
+                            // show warning 
+                            JOptionPane.showMessageDialog(null,
+                                    "Please register as a manager.",
+                                    "Manager Does not Exist",
+                                    JOptionPane.WARNING_MESSAGE);
                         }
-                    } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
+                        else{
+                            Customer customer = new Customer(fname, lname, email, password, "Customer",0,0);
+                            if(db.addUserToDB(fname, lname, email, password, "Customer")){
+                                currentFrame.dispose();
+                                UserLoginPage loginPage = new UserLoginPage();
+                                loginPage.setVisible(true);
+                            }
+                        }
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
                     }
                 }
             }
