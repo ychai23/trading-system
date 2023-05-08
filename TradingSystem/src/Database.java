@@ -808,8 +808,35 @@ public class Database {
             stmt.setInt(2, userid);
             rs = stmt.executeQuery();
             if (rs.next()) {
-                double balance = rs.getInt("balance");
-                return balance;
+                return rs.getDouble("balance");
+            } else {
+                return -1;
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    public double getDeposit(int userid) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT deposit FROM Users WHERE userid = ?");
+            stmt.setInt(1, userid);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("deposit");
             } else {
                 return -1;
             }
