@@ -1,6 +1,10 @@
 import java.sql.SQLException;
 import java.util.List;
 
+/*
+* ManagerService class serves as a bridge between manager and the database
+* It implements the methods that the manager can perform specified in the ManagerService interface
+*/
 public class ManagerService implements ManagerServiceInterface{
     Database db;
     private static ManagerService instance = null;

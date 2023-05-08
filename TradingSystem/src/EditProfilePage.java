@@ -1,9 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.SQLException;
-import java.sql.Statement;
 
+// Customer User Interface - edit profile (email and password)
 public class EditProfilePage extends JFrame {
     private CustomerService cs;
     private JLabel emailLabel = new JLabel("Email:");

@@ -30,7 +30,6 @@ CREATE TABLE Stocks (
   PRIMARY KEY(stockid)
 );
 
-
 CREATE TABLE userStock(
   userid INT not null,
   stockid INT not null,
@@ -49,6 +48,6 @@ CREATE TABLE userStocks(
   purchase_price DECIMAL(10,2), 
   FOREIGN KEY (userid) REFERENCES Users(userid) ON DELETE NO ACTION,
   FOREIGN KEY (stockid) REFERENCES Stocks(stockid) ON DELETE NO ACTION,
-  PRIMARY KEY(purchase_order, userid,stockid)
+  PRIMARY KEY(purchase_order, userid, stockid)
 );
 

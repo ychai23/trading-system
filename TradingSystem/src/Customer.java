@@ -1,3 +1,4 @@
+// Customer class allows to create a Customer object constructed from the customer table in database when the cusotmer logs in and maintain the information necessary.
 public class Customer extends User {
     private double baseCash;
     private double deposit;

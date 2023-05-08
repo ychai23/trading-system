@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
 
+// Customer User Interface - buy stock from stock market
 public class BuyStockPage extends JFrame{
     private CustomerService cs;
     private JButton viewStockButton = new JButton(" View ALL Stock in Market");

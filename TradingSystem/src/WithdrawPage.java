@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
 
+// Customer User Interface - allows customer to withdraw money from account
 public class WithdrawPage extends JFrame{
     private CustomerService cs;
     private JLabel currentCashLabel = new JLabel();

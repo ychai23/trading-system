@@ -2,10 +2,11 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+
+// Manager User Interface - manage all users in the system
 public class ManageUsersPage extends JFrame {
     private ManagerService ms;
     private JTable table;

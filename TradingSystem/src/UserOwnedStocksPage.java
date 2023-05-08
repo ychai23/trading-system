@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
-
+// Customer User Interface - allows users to see all the stocks he owned
 public class UserOwnedStocksPage extends JFrame {
     private List<Stock> stockList;
 
