@@ -115,5 +115,19 @@ public class ManagerService implements ManagerServiceInterface{
         }
     }
 
+    public boolean updateStockName(Stock updatedStock, String name){
+        try {
+            return this.db.updateStockName(updatedStock, name);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public boolean updateStockSymbol(Stock updatedStock, String symbol){
+        try {
+            return this.db.updateStockSymbol(updatedStock, symbol);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

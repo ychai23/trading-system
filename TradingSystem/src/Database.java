@@ -24,7 +24,7 @@ public class Database {
         if (instance == null) {
             try {
                 // change this password to your own
-                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
+                instance = new Database("jdbc:mysql://localhost:3306/tradingSystem", "root", "18072536");
             } catch (SQLException e) {
                 System.err.println("Error: " + e.getMessage());
             } catch (ClassNotFoundException e) {
@@ -36,7 +36,7 @@ public class Database {
 
 
     public Connection getConnection() throws SQLException {
-        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "jctheboi");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/tradingSystem", "root", "18072536");
         return conn;
     }
 
@@ -301,6 +301,60 @@ public class Database {
             stmt = conn.prepareStatement(sql);
             stmt.setDouble(1, updatedStock.getPrice());
             stmt.setString(2, updatedStock.getSymbol());
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+
+
+    }
+    public boolean updateStockName(Stock updatedStock, String name) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "UPDATE stocks SET name = ? WHERE symbol = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            stmt.setString(2, updatedStock.getSymbol());
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+
+
+    }
+
+
+    public boolean updateStockSymbol(Stock updatedStock, String symbol) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "UPDATE stocks SET symbol = ? WHERE name = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, symbol);
+            stmt.setString(2, updatedStock.getName());
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -753,8 +807,35 @@ public class Database {
             stmt.setInt(2, userid);
             rs = stmt.executeQuery();
             if (rs.next()) {
-                double balance = rs.getInt("balance");
-                return balance;
+                return rs.getDouble("balance");
+            } else {
+                return -1;
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
+    public double getDeposit(int userid) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT deposit FROM Users WHERE userid = ?");
+            stmt.setInt(1, userid);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("deposit");
             } else {
                 return -1;
             }
@@ -811,8 +892,17 @@ public class Database {
         double stockPrice = getCurrentStockPrice(stockID);
         double spent = stockPrice * buyQuantity;
 
+
         try {
             conn = getConnection();
+            stmt = conn.prepareStatement("SELECT * FROM Stocks WHERE stockid =" + stockID);
+            ResultSet rs = stmt.executeQuery();
+
+            if (!rs.isBeforeFirst()) {
+                // Throw a NoDataFoundException if no data found
+                throw new NoDataFoundException();
+            }
+
             if (checkStock(userid, stockID)) {
                 // if stock in userStock, then just change the balance and quantity
                 String sql = "UPDATE userStock SET quantity = quantity + ?, balance = balance - ? WHERE stockid = ?";
@@ -853,6 +943,8 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
             return 1;
+        } catch (NoDataFoundException e) {
+            throw new RuntimeException(e);
         } finally {
             if (stmt != null) {
                 stmt.close();
@@ -884,6 +976,10 @@ public class Database {
 
             //update userStocks
             ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM userStocks WHERE userid =" + userid + " AND stockid = " + stockID + " ORDER BY purchase_order ASC");
+            if (!rs.isBeforeFirst()) {
+                // Throw a NoDataFoundException if no data found
+                throw new NoDataFoundException();
+            }
             double totalCostBasis = 0.0;
             int sharesSold = 0;
 
@@ -918,6 +1014,8 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
             return 0;
+        } catch (NoDataFoundException e) {
+            throw new RuntimeException(e);
         } finally {
             if (stmt != null) {
                 stmt.close();
@@ -949,7 +1047,8 @@ public class Database {
                 while (rs.next()) {
                     int purchasedShares = rs.getInt("quantity");
                     double purchasePrice = rs.getDouble("purchase_price");
-                    System.out.println("para" + purchasedShares + currentPrice + purchasePrice);
+                    System.out.println("purchased number of shares:" + purchasedShares + " current price:" +currentPrice +  "purchase price:" + purchasePrice);
+
                     totalProfit += purchasedShares * (currentPrice - purchasePrice);
                 }
 

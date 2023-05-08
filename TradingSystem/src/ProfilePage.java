@@ -36,7 +36,7 @@ public class ProfilePage extends JFrame{
         add(unrealizedProfitLable);
         unrealizedProfitLable.setText(("Unrealized Profit:" + cs.totalUnrealizedProfit(c.getId())));
         add(realizedProfitLable);
-        realizedProfitLable.setText(("Realized Profit:" + this.c.getRealizedProfit()));
+        realizedProfitLable.setText(("Realized Profit:" + cs.getRealizedProfit()));
         add(backButton);
         add(editButton);
 

@@ -25,4 +25,8 @@ public interface ManagerServiceInterface {
     //get stock from id
     public Stock getStockFromID(int stockid);
 
+    public boolean updateStockName(Stock updatedStock, String name);
+    public boolean updateStockSymbol(Stock updatedStock, String symbol);
+
+
 }

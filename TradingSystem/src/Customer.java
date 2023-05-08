@@ -31,4 +31,8 @@ public class Customer extends User {
         System.out.println("You withdrew " + amount + " from your account.");
         return this.baseCash;
     }
+
+    public double getDeposit() {
+        return deposit;
+    }
 }

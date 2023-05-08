@@ -27,16 +27,23 @@ public class DepositPage extends JFrame {
         depositButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // confirm deposit and deposit
-                double money = Double.parseDouble(amountTextField.getText());
-                if (money < 0){
-                    JOptionPane.showMessageDialog(null,
-                            "Please enter valid amount of money",
-                            "INVALID AMOUNT",
-                            JOptionPane.WARNING_MESSAGE);
-                    return;
+                try{
+                    double money = Double.parseDouble(amountTextField.getText());
+                    if (money < 0){
+                        JOptionPane.showMessageDialog(null,
+                                "Please enter valid amount of money",
+                                "INVALID AMOUNT",
+                                JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                    cs.deposit(money);
+                    currentCashLabel.setText("Current Balance: " + cs.getBalance());
                 }
-                cs.deposit(money);
-                currentCashLabel.setText("Current Balance: " + cs.getBalance());
+                catch (NumberFormatException en){
+                    JOptionPane.showMessageDialog(null, "Please enter valid double.", "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+
+
             }
         });
 
