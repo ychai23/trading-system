@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
 
+// Shared User Interface - allows user to login to belonged account
 public class UserLoginPage extends JFrame {
     private Database db;
     private JLabel emailLabel = new JLabel("Email:");

@@ -1,3 +1,6 @@
+/*
+* ManagerServiceInterface lists out all the operations the manager can perform
+*/
 public interface ManagerServiceInterface {
     // add user to db
     public boolean addUserToDB(String fname, String lname, String email, String password, String role);

@@ -3,6 +3,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
 
+/*
+ * Customer User Interface - MainPage for customers to perform operations include
+ * View/Edit current profile information
+ * Buy/Sell Stocks
+ * Withdraw/Deposit money from account
+ * Logout
+*/
 public class CustomerMainPage extends JFrame{
     private CustomerService cs;
     private JButton viewProfileButton = new JButton("View Profile");

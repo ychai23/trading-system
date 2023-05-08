@@ -3,6 +3,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
 
+/*
+* Manager Interface - MainPage for the manager to perform operations include
+* View/Edit current stock information
+* Approve/Stop users
+* Logout
+*/
 public class ManagerMainPage extends JFrame {
     private Database db;
     private JButton manageUsersButton = new JButton("Manage Users");

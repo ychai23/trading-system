@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
+// Shared User Interface - allows users to visualize the stock data
 public class StockPage extends JFrame {
     private ManagerService ms;
     private Stock stock;

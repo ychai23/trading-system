@@ -1,10 +1,5 @@
-// Import the necessary packages
-import java.sql.*;
-        import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.util.ArrayList;
 
+// Stock class allows to create a reference to a sepcific stock in the market
 public class Stock {
 
     private String name;
@@ -16,8 +11,6 @@ public class Stock {
 
     private boolean active;
     private Database db;
-
-
 
     public Stock(String name, String symbol ,double price){
         this.db = Database.getInstance();

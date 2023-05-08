@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+// Customer User Interface - deposit money into account
 public class DepositPage extends JFrame {
     private CustomerService cs;
     private JLabel currentCashLabel = new JLabel();
