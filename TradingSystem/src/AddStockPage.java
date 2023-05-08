@@ -37,8 +37,12 @@ public class AddStockPage extends JFrame {
 
             try{
                 double price = Double.parseDouble(priceField.getText().trim());
-                Stock stock = new Stock(name,symbol,price);
-                ms.addStockToMarket(stock);
+                if (price <= 0 || Double.isInfinite(price)){
+                    JOptionPane.showMessageDialog(null, "Please enter valid double price.", "Warning", JOptionPane.WARNING_MESSAGE);
+                } else{
+                    Stock stock = new Stock(name,symbol,price);
+                    ms.addStockToMarket(stock);
+                }
             }catch (NumberFormatException num){
                 JOptionPane.showMessageDialog(null, "Please enter valid double price.", "Warning", JOptionPane.WARNING_MESSAGE);
             }

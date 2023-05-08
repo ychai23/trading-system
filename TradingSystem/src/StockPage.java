@@ -64,9 +64,13 @@ public class StockPage extends JFrame {
         updateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    double price = Double.parseDouble(priceField.getText());
-                    stock.setPrice(price);
-                    ms.updateStockPrice(stock,price);
+                    double price = Double.parseDouble(priceField.getText().trim());
+                    if (price <= 0 || Double.isInfinite(price)){
+                        JOptionPane.showMessageDialog(null, "Please enter valid double price.", "Warning", JOptionPane.WARNING_MESSAGE);
+                    } else{
+                        stock.setPrice(price);
+                        ms.updateStockPrice(stock,price);
+                    }
                     try {
                         ManageStocksPage msp = new ManageStocksPage();
                         msp.setVisible(true);
