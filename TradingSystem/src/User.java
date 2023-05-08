@@ -1,6 +1,8 @@
 import java.sql.*;
 
-
+/*
+ * User class allows all the basic operations performed by both customer and manager
+ */
 public class User {
     private Database db;
     private int id;

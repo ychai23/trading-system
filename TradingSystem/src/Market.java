@@ -1,12 +1,14 @@
 // Import the necessary packages
 import java.sql.*;
-        import javax.swing.*;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/*
+ * Market class allows to create a reference to all the stocks in the market to assist in viewing/interacting with the data
+ */
 public class Market extends JFrame {
     // Declare the JTable component
     private JTable table;
@@ -99,8 +101,6 @@ public class Market extends JFrame {
         }
     }
 
-
-    // Import the necessary packages
 
     public Stock getStockBySymbol(String symbol){
         Stock result = symbolStockMapping.getOrDefault(symbol, null);

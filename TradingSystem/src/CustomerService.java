@@ -2,11 +2,15 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
+/*
+* CustomerService class serves as a bridge between customer and the database
+* It implements the methods that customers can perform specified in the CustomerService interface
+*/
 public class CustomerService implements CustomerServiceInterface{
     Database db;
     Customer c;
-
     private int userid;
+
     public CustomerService(Database db, Customer c){
         this.db = db;
         this.c = c;
@@ -131,20 +135,6 @@ public class CustomerService implements CustomerServiceInterface{
             throw new RuntimeException(e);
         }
     }
-
-//    public double getUnrealizedProfit() throws SQLException {
-//        List<Stock> stockList = getOwnedStocks(this.userid);
-//        HashMap<Integer, Integer> stockQuantity = this.db.getUserStockQuantity(this.userid);
-//
-//        double unrealizedProfit = 0.0;
-//        for (Stock stock : stockList){
-//            int stockid = stock.getID();
-//            unrealizedProfit += stockQuantity.get(stockid) * this.db.getCurrentStockPrice(stockid);
-//            unrealizedProfit += this.db.getBalance(userid, stockid);
-//        }
-//        return unrealizedProfit;
-//
-//    }
 
     HashMap<Integer, Double> stockUnrealizedProfit(int userid) throws SQLException {
         return this.db.getUnrealizedProfit(userid);

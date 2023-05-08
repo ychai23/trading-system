@@ -2,8 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
-import java.util.List;
 
+
+// Customer User Interface - sell stock from stock market
 public class SellStockPage extends JFrame{
     private Database db;
     private CustomerService cs;

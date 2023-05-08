@@ -4,7 +4,6 @@ and class is accessed throughout application.
 
 Class handles all database operations.
 */
-import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;

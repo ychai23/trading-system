@@ -1,8 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.sql.SQLException;
 
+// Manager User Interface - add stock to the stock market
 public class AddStockPage extends JFrame {
     private ManagerService ms;
     private JTextField nameField = new JTextField(20);

@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
 
+// Customer User Interface - view customer's information
 public class ProfilePage extends JFrame{
     private Customer c;
     private JLabel firstnameLabel = new JLabel();

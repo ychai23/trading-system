@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
 
+
+// Shared User Interface - choose options to login/register
 public class MainPage extends JFrame{
     private JButton loginButton = new JButton("Login");
     private JButton registerButton = new JButton("Register");

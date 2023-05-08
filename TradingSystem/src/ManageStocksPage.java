@@ -1,10 +1,11 @@
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
-import java.util.List;
 
+
+
+// Manager User Interface - view/edit stock information
 public class ManageStocksPage extends JFrame {
     private ManagerService ms;
     private Market market;

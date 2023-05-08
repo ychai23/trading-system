@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
 
+// Manager User Interface - allows manager to edit/activate/deactivate users
 public class UserPage extends JFrame {
     private User user;
     public UserPage(User user) {

@@ -4,6 +4,8 @@ import java.awt.event.*;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+
+// Shared User Interface - allows users to register
 public class UserRegister extends JFrame {
     private Database db;
     private JLabel fnameLabel = new JLabel("First Name:");
