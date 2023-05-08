@@ -163,6 +163,62 @@ public class Database {
             }
         }
     }
+    public boolean getUserStatus(String email) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        boolean status = false;
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT isactive FROM Users WHERE `email` = ?");
+            stmt.setString(1, email);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                status = rs.getBoolean("isactive");
+            } else {
+                System.out.println("User not found.");
+                return false;
+            }
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return status;
+    }
+
+    // getStockStatus
+    public boolean getStockStatus(String symbol) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        boolean status = false;
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT isactive FROM Stocks WHERE `symbol` = ?");
+            stmt.setString(1, symbol);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                status = rs.getBoolean("isactive");
+            } else {
+                System.out.println("Stock not found.");
+                return false;
+            }
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return status;
+    }
 
     // check if a user in db
     public boolean checkUserInDB(String email, String password) throws SQLException {

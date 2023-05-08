@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 
 // Stock class allows to create a reference to a sepcific stock in the market
 public class Stock {
@@ -40,7 +41,12 @@ public class Stock {
     }
 
     public boolean isActive() {
-        return active;
+        try {
+            return db.getStockStatus(this.symbol);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public void setActive(boolean active) {

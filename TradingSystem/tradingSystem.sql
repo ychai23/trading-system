@@ -15,7 +15,7 @@ CREATE TABLE Users (
   email VARCHAR(100),
   role VARCHAR(50),
   password VARCHAR(100),
-  isactive BOOLEAN default 1,
+  isactive BOOLEAN default 0,
   baseCash DECIMAL(10,2) default 0,
   deposit DECIMAL(10,2) default 0,
   PRIMARY KEY(userid)

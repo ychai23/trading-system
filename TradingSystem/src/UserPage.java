@@ -50,14 +50,37 @@ public class UserPage extends JFrame {
  
             }
         });
+        // Create JButton to deactivate user
+        JButton activateButton = new JButton("Activate User");
+        activateButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                user.setActive();
+                // redirect to manage users page
+                ManageUsersPage mup = null;
+                try {
+                    mup = new ManageUsersPage();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                mup.setVisible(true);
+
+            }
+        });
 
         // Create JPanel to hold components
-        JPanel panel = new JPanel(new GridLayout(3, 2));
+        JPanel panel = new JPanel(new GridLayout(4, 2));
         panel.add(nameLabel);
         panel.add(nameField);
         panel.add(emailLabel);
         panel.add(emailField);
-        panel.add(deactivateButton);
+        if(user.isActive()){
+            System.out.println(user.isActive());
+            panel.add(deactivateButton);
+        }
+        else{
+            panel.add(activateButton);
+        }
+
         panel.add(cancelButton);
 
         // Add panel to frame

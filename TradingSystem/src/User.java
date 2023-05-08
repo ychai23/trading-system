@@ -20,7 +20,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
-        this.active = true;
+        this.active = false;
         try {
             this.id = db.getUserID(email);
         } catch (SQLException e) {
@@ -78,7 +78,12 @@ public class User {
         return false;
     }
     public boolean isActive() {
-        return active;
+        try {
+            return db.getUserStatus(this.email);
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
     public void setActive() {
         try {
