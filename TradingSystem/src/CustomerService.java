@@ -23,6 +23,14 @@ public class CustomerService implements CustomerServiceInterface{
         }
     }
 
+    public double getDeposit(){
+        try {
+            return this.db.getDeposit(this.c.getId());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public List<Stock> getMarketData(){
         try {
             return this.db.getMarketData();
@@ -107,16 +115,18 @@ public class CustomerService implements CustomerServiceInterface{
             return false;
         }
         double newBaseCash = this.c.withdraw(amount);
+        double newDeposit = this.c.getDeposit();
         try {
-            return (this.db.updateBase(newBaseCash, this.c.getId()) && this.db.setCustomerDeposit(this.c.getId(), newBaseCash));
+            return (this.db.updateBase(newBaseCash, this.c.getId()) && this.db.setCustomerDeposit(this.c.getId(), newDeposit));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
     public boolean deposit(double amount){
         double newBaseCash = this.c.desposit(amount);
+        double newDeposit = this.c.getDeposit();
         try {
-            return (this.db.updateBase(newBaseCash, this.c.getId()) && this.db.setCustomerDeposit(this.c.getId(), newBaseCash));
+            return (this.db.updateBase(newBaseCash, this.c.getId()) && this.db.setCustomerDeposit(this.c.getId(), newDeposit));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -150,5 +160,9 @@ public class CustomerService implements CustomerServiceInterface{
 
         System.out.println("total profit" + totalProfit);
         return totalProfit;
+    }
+
+    public double getRealizedProfit(){
+        return getBalance() - getDeposit();
     }
 }
