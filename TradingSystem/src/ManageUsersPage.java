@@ -75,15 +75,19 @@ public class ManageUsersPage extends JFrame {
         // Add action listener to view button
         viewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                try{
                 int userId = Integer.parseInt(idField.getText());
-                User user = ms.getUserFromID(userId);
-                if (user != null) {
-                    setVisible(false);
-                    dispose();
-                    UserPage up = new UserPage(user);
-                    up.setVisible(true);
-                } else {
-                    JOptionPane.showMessageDialog(ManageUsersPage.this, "User not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                    User user = ms.getUserFromID(userId);
+                    if (user != null) {
+                        setVisible(false);
+                        dispose();
+                        UserPage up = new UserPage(user);
+                        up.setVisible(true);
+                    } else {
+                        JOptionPane.showMessageDialog(ManageUsersPage.this, "User not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }catch (NumberFormatException en){
+                    JOptionPane.showMessageDialog(null, "Please enter valid integer.", "Warning", JOptionPane.WARNING_MESSAGE);
                 }
             }
         });

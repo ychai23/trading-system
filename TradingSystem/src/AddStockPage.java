@@ -34,11 +34,16 @@ public class AddStockPage extends JFrame {
             // Get the values from the input fields
             String name = nameField.getText().trim();
             String symbol = symbolField.getText().trim();
-            double price = Double.parseDouble(priceField.getText().trim());
+
+            try{
+                double price = Double.parseDouble(priceField.getText().trim());
+                Stock stock = new Stock(name,symbol,price);
+                ms.addStockToMarket(stock);
+            }catch (NumberFormatException num){
+                JOptionPane.showMessageDialog(null, "Please enter valid double price.", "Warning", JOptionPane.WARNING_MESSAGE);
+            }
 
             // Add the new stock to the database
-            Stock stock = new Stock(name,symbol,price);
-            ms.addStockToMarket(stock);
 
             // open the manage stocks page
             try {

@@ -25,7 +25,7 @@ public class Database {
         if (instance == null) {
             try {
                 // change this password to your own
-                instance = new Database("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
+                instance = new Database("jdbc:mysql://localhost:3306/tradingSystem", "root", "18072536");
             } catch (SQLException e) {
                 System.err.println("Error: " + e.getMessage());
             } catch (ClassNotFoundException e) {
@@ -37,7 +37,7 @@ public class Database {
 
 
     public Connection getConnection() throws SQLException {
-        conn = DriverManager.getConnection("jdbc:mysql://localhost/tradingSystem", "root", "saibaba18baba");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/tradingSystem", "root", "18072536");
         return conn;
     }
 
@@ -866,8 +866,17 @@ public class Database {
         double stockPrice = getCurrentStockPrice(stockID);
         double spent = stockPrice * buyQuantity;
 
+
         try {
             conn = getConnection();
+            stmt = conn.prepareStatement("SELECT * FROM Stocks WHERE stockid =" + stockID);
+            ResultSet rs = stmt.executeQuery();
+
+            if (!rs.isBeforeFirst()) {
+                // Throw a NoDataFoundException if no data found
+                throw new NoDataFoundException();
+            }
+
             if (checkStock(userid, stockID)) {
                 // if stock in userStock, then just change the balance and quantity
                 String sql = "UPDATE userStock SET quantity = quantity + ?, balance = balance - ? WHERE stockid = ?";
@@ -908,6 +917,8 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
             return 1;
+        } catch (NoDataFoundException e) {
+            throw new RuntimeException(e);
         } finally {
             if (stmt != null) {
                 stmt.close();
@@ -939,6 +950,10 @@ public class Database {
 
             //update userStocks
             ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM userStocks WHERE userid =" + userid + " AND stockid = " + stockID + " ORDER BY purchase_order ASC");
+            if (!rs.isBeforeFirst()) {
+                // Throw a NoDataFoundException if no data found
+                throw new NoDataFoundException();
+            }
             double totalCostBasis = 0.0;
             int sharesSold = 0;
 
@@ -973,6 +988,8 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
             return 0;
+        } catch (NoDataFoundException e) {
+            throw new RuntimeException(e);
         } finally {
             if (stmt != null) {
                 stmt.close();
@@ -1004,7 +1021,8 @@ public class Database {
                 while (rs.next()) {
                     int purchasedShares = rs.getInt("quantity");
                     double purchasePrice = rs.getDouble("purchase_price");
-                    System.out.println("para" + purchasedShares + currentPrice + purchasePrice);
+                    System.out.println("purchased number of shares:" + purchasedShares + " current price:" +currentPrice +  "purchase price:" + purchasePrice);
+
                     totalProfit += purchasedShares * (currentPrice - purchasePrice);
                 }
 

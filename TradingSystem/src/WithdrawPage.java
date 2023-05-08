@@ -25,17 +25,25 @@ public class WithdrawPage extends JFrame{
 
         withdrawButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // confirm withdraw and withdraws
-                double money = Double.parseDouble(amountTextField.getText());
-                if (money < 0){
-                    JOptionPane.showMessageDialog(null,
-                            "Please enter valid amount of money",
-                            "INVALID AMOUNT",
-                            JOptionPane.WARNING_MESSAGE);
-                    return;
+                try {
+                    // confirm withdraw and withdraws
+                    double money = Double.parseDouble(amountTextField.getText());
+                    if (money < 0) {
+                        JOptionPane.showMessageDialog(null,
+                                "Please enter valid amount of money",
+                                "INVALID AMOUNT",
+                                JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                    if (!cs.withdraw(Double.parseDouble(amountTextField.getText()))){
+                        JOptionPane.showMessageDialog(null, "You don't have enough money.", "Warning", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                    currentCashLabel.setText("Current Balance: " + cs.getBalance());
+
+                } catch (NumberFormatException en) {
+                    JOptionPane.showMessageDialog(null, "Please enter valid double.", "Warning", JOptionPane.WARNING_MESSAGE);
                 }
-                cs.withdraw(Double.parseDouble(amountTextField.getText()));
-                currentCashLabel.setText("Current Balance: " + cs.getBalance());
             }
         });
 
